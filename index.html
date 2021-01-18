@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Влизане в системата</title>
+		<link rel="stylesheet" href="style/index.css" />
+		<script src="script/index.js" defer></script>
+	</head>
+	<body>
+		<header>
+			<h2>Система за генериране на разписание</h2>
+			<h4>
+				За да разгледате разписанието създайте нов акаунт или влезте в съществуващ такъв
+			</h4>
+		</header>
+
+		<article id="container">
+			<section id="registration">
+				<h2 id="registration-heading">Регистрация</h2>
+				<form id="registration-form">
+					<label id="registration-error"></label>
+					<input type="email" name="email" id="register-email" placeholder="E-mail" />
+					<input type="text" id="register-username" placeholder="Потребителско име" />
+					<input type="password" id="register-password" placeholder="Парола" />
+					<input type="password"	id="register-password-repeated"	placeholder="Потвърди паролата" />
+					<input type="submit" value="Регистрирай се" id="register-button" />
+				</form>
+			</section>
+
+			<section id="login">
+				<h2 id="login-heading">Вход</h2>
+				<form id="login-form">
+					<label id="login-error"></label>
+					<input type="text" id="login-username" placeholder="Потребителско име" />
+					<input type="password" id="login-password" placeholder="Парола" />
+					<input type="submit" value="Влез" id="enter-button" />
+				</form>
+			</section>
+		</article>
+
+		<footer>
+			<p>Разработено от: Даниел Димитров, Виктор Христов, Иван Чучулски</p>
+		</footer>
+	</body>
+</html>
