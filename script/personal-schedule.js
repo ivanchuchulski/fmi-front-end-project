@@ -1,11 +1,8 @@
+// using the javascript immediately-invoked function expression (IIFE)
 (function () {
-	window.onload = () => loadEvents();
+	window.onload = () => loadPersonalEvents();
 
-	addNavbarHandlers();
-
-	let personalScheduleButton = document
-		.getElementById("make-personal")
-		.addEventListener("click", generatePersonalisedSchedule);
+	navigationButtonHandlers();
 
 	let applyFilterButton = document
 		.getElementById("apply-filter")
@@ -16,70 +13,64 @@
 		.addEventListener("click", removeFilters);
 })();
 
-function loadEvents() {
-	const LOAD_SCHEDULE_METHOD = "GET";
-	const LOAD_SCHEDULE_URL = "https://my-json-server.typicode.com/ivanchuchulski/events-db/events";
+function loadPersonalEvents() {
+	const PERSONAL_SCHEDULE_URL = "https://my-json-server.typicode.com/ivanchuchulski/events-db/preferences";
+	const PERSONAL_SCHEDULE_METHOD = "GET";
 
-	loadEventsRequest(LOAD_SCHEDULE_URL, LOAD_SCHEDULE_METHOD);
+	ajaxLoadPersonalScheduleRequest(PERSONAL_SCHEDULE_URL, PERSONAL_SCHEDULE_METHOD);
 }
 
-function loadEventsRequest(url, method, data) {
+function ajaxLoadPersonalScheduleRequest(url, method, data) {
 	let xhr = new XMLHttpRequest();
 
-	xhr.addEventListener("load", () => loadEventsHandler(xhr));
+	xhr.addEventListener("load", () => ajaxLoadPersonalScheduleHandler(xhr));
 
 	xhr.open(method, url, true);
 	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xhr.send(data);
 }
 
-function loadEventsHandler(xhr) {
+function ajaxLoadPersonalScheduleHandler(xhr) {
 	const okResponseCode = 200;
 
 	let responseCode = xhr.status;
 	let responseText = xhr.responseText;
 
 	if (responseCode === okResponseCode) {
-		console.log("success load schedule");
-		drawEvents(responseText);
+		drawPersonalEvents(responseText);
 	} else {
-		console.log("error : load schedule");
-		displayMessage("грешка : събитията не може да бъдат заредени");
+		displayMessage(
+			"грешка : не е започната сесия или сесията е изтелкла(или персоналните събития не може да бъдат заредени)"
+		);
 	}
 }
 
-function drawEvents(responseText) {
-	let username = "test";
+function drawPersonalEvents(responseText) {
+	let eventParent = document.getElementById("personal-events");
+
+	let username = "test"
 	document.getElementById("username").innerText += " " + username + "!";
 
-	let eventList = JSON.parse(responseText);
+	let preferencesList = JSON.parse(responseText);
 
 	console.log("eventList : ")
-	console.log(eventList);
+	console.log(preferencesList);
 
-	let eventParent = document.getElementById("event-list");
+	if (preferencesList.length === 0) {
+		displayMessage("Нямате избрани презентации!");
+		return;
+	}
 
-	Object.keys(eventList).forEach((event) => {
-		let theme = eventList[event].theme;
-		let presenterName = eventList[event].presenterName;
-		let place = eventList[event].place;
+	Object.keys(preferencesList).forEach((event) => {
+		let theme = preferencesList[event].theme;
+		let presentDate = preferencesList[event].presentDate;
+		let presenterName = preferencesList[event].presenterName;
+		let place = preferencesList[event].place;
+		let preferenceType = preferencesList[event].preferenceType;
 
-		let facultyNumber = eventList[event].facultyNumber;
-		let groupNumber = eventList[event].groupNumber;
-		let dayNumber = eventList[event].dayNumber;
-
-		// building date from presentations_data date
-		let date = new Date(eventList[event].presentDate);
-
-		let time = date.toLocaleTimeString();
-		let temp = time.split(":");
-		time = temp[0] + ":" + temp[1];
-
-		let ymd = date.toDateString();
-		let tempYMD = ymd.split(" ");
-		ymd = `${tempYMD[2]} ${tempYMD[1]} ${tempYMD[3]}`;
-
-		let presentDate = time + " " + ymd;
+		let facultyNumber = preferencesList[event].facultyNumber;
+		let groupNumber = preferencesList[event].groupNumber;
+		let dayNumber = preferencesList[event].dayNumber;
 
 		let eventElement = document.createElement("div");
 
@@ -91,7 +82,6 @@ function drawEvents(responseText) {
 		let couldGoButton = document.createElement("button");
 
 		eventElement.className += "event";
-
 		details.className += "details";
 		timeinfo.className += "timeinfo";
 		preference.className += "preference";
@@ -100,18 +90,18 @@ function drawEvents(responseText) {
 		couldGoButton.className += "preferenceButton couldAttend";
 
 		details.innerHTML = `
-		<p class="theme">${theme}</p>
-		<p class="presenter">${presenterName}, ${facultyNumber}</p>
-		<p class="group-number"> Група ${groupNumber}</p>`;
+			<p class="theme">${theme}</p>
+			<p class="presenter">${presenterName}, ${facultyNumber}</p>
+			<p class="group-number"> Група ${groupNumber}</p>`;
 
 		timeinfo.innerHTML = `
-		<p class="date">${presentDate}</p>
-		<p class="day-number">Ден ${dayNumber}</p>
-		<p class="presentationSite">
-			<a href=${place} target="_blank">
-			<span class="place-message">Място на провеждане</span>
-			<span class="place-address">${place}</span>
-		</p>`;
+			<p class="date">${presentDate}</p>
+			<p class="day-number">Ден ${dayNumber}</p>
+			<p class="presentationSite">
+				<a href=${place} target="_blank">
+				<span class="place-message">Място на провеждане</span>
+				<span class="place-address">${place}</span>
+			</p>`;
 
 		willGoButton.innerText += "ще отида";
 		couldGoButton.innerText += "може би ще отида";
@@ -129,10 +119,25 @@ function drawEvents(responseText) {
 		couldGoButton.addEventListener("click", addToPreferences);
 
 		// by default hide the place address link
-		timeinfo.getElementsByClassName('place-address')[0].style.display = "none";
+		timeinfo.getElementsByClassName("place-address")[0].style.display = "none";
 
 		timeinfo.addEventListener("mouseover", showAddressOnHover);
-		timeinfo.addEventListener("mouseleave", showMessageOnLeave)
+		timeinfo.addEventListener("mouseleave", showMessageOnLeave);
+
+		if (preferenceType === "willAttend") {
+			addHighlight(willGoButton);
+
+			willGoButton.removeEventListener("click", addToPreferences);
+
+			couldGoButton.style.display = "none";
+		}
+		else {
+			addHighlight(couldGoButton);
+
+			couldGoButton.removeEventListener("click", addToPreferences);
+
+			willGoButton.style.display = "none";
+		}
 	});
 }
 
@@ -152,19 +157,17 @@ function showMessageOnLeave() {
 	placeAddressElement.style.display = "none";
 }
 
-function addNavbarHandlers() {
-	let schedulePageButton = document.getElementById("schedule-page-button");
-	schedulePageButton.addEventListener("click", () => {
-		window.location = "schedule.html";
-	});
-
-	addHighlight(schedulePageButton);
-
-	let personalSchedule = document
-		.getElementById("personalised-schedule-button")
+function navigationButtonHandlers() {
+	let schedulePageButton = document
+		.getElementById("schedule-page-button")
 		.addEventListener("click", () => {
-			window.location = "personal-schedule.html";
+			window.location = "schedule.html";
 		});
+
+	let personalisedScheduleButton = document.getElementById("personalised-schedule-button");
+	personalisedScheduleButton.addEventListener("click", () => {
+		window.location = "personal-schedule.html";
+	});
 
 	let statisticsButton = document
 		.getElementById("view-statistics")
@@ -172,16 +175,22 @@ function addNavbarHandlers() {
 			window.location = "statistics.html";
 		});
 
-	let logoutButton = document.getElementById("logout-button")
+	let logoutButton = document
+		.getElementById("logout-button")
 		.addEventListener("click", logoutRequest);
+
+	addHighlight(personalisedScheduleButton);
 }
 
 function generateScheduleByFilters() {
 	let daySelectElement = document.getElementById("filter-by-day");
 	let groupSelectElement = document.getElementById("filter-by-group");
+	let preferenceSelectElement = document.getElementById("filter-by-preference");
 
 	let filterByDay = daySelectElement.options[daySelectElement.selectedIndex].value;
 	let filterByGroup = groupSelectElement.options[groupSelectElement.selectedIndex].value;
+	let filterByPreference =
+		preferenceSelectElement.options[preferenceSelectElement.selectedIndex].value;
 
 	let events = document.getElementsByClassName("event");
 
@@ -194,13 +203,18 @@ function generateScheduleByFilters() {
 	if (filterByGroup) {
 		filterEventsByGroup(events, filterByGroup.slice(-1));
 	}
+
+	if (filterByPreference) {
+		filterEventsByPreference(events, filterByPreference);
+	}
 }
 
 function filterEventsByDay(events, dayFilter) {
 	for (let index = 0; index < events.length; index++) {
 		const event = events[index];
-
 		let eventDay = event.getElementsByClassName("day-number")[0].innerText.split(" ")[1];
+
+		//console.log(eventDay);
 
 		if (eventDay !== dayFilter) {
 			hideEvent(event);
@@ -222,7 +236,6 @@ function displayAllEvents() {
 	let groupSelectElement = document.getElementById("filter-by-group");
 
 	let events = document.getElementsByClassName("event");
-	//console.log(events);
 
 	for (let index = 0; index < events.length; index++) {
 		let element = events[index];
@@ -233,17 +246,18 @@ function displayAllEvents() {
 function removeSelectedFilters() {
 	let daySelectElement = document.getElementById("filter-by-day");
 	let groupSelectElement = document.getElementById("filter-by-group");
+	let preferenceSelectElement = document.getElementById("filter-by-preference");
 
 	daySelectElement.selectedIndex = 0;
 	groupSelectElement.selectedIndex = 0;
+	preferenceSelectElement.selectedIndex = 0;
 }
 
 function filterEventsByGroup(events, groupFilter) {
 	for (let index = 0; index < events.length; index++) {
 		const event = events[index];
-		let eventGroup = event.getElementsByClassName("group-number")[0].innerText.split(" ")[1];
 
-		//console.log(eventDay);
+		let eventGroup = event.getElementsByClassName("group-number")[0].innerText.split(" ")[1];
 
 		if (eventGroup !== groupFilter) {
 			hideEvent(event);
@@ -251,11 +265,25 @@ function filterEventsByGroup(events, groupFilter) {
 	}
 }
 
+function filterEventsByPreference(events, preferenceFilter) {
+	for (let index = 0; index < events.length; index++) {
+		const event = events[index];
+		let activePreferenceButton = event.getElementsByClassName("active")[0];
+		let buttonPreference = activePreferenceButton.className.split(" ")[1];
+
+		if (buttonPreference !== preferenceFilter) {
+			hideEvent(event);
+		}
+	}
+}
+
+
+
 function addToPreferences() {
-	const ACTIVE_CLASSNAME = "active";
+	const ACITVE_CLASSNAME = "active";
 
 	// first check if the this button is active
-	if (this.classList.contains(ACTIVE_CLASSNAME)) {
+	if (this.classList.contains(ACITVE_CLASSNAME)) {
 		removeHightlight(this);
 		return;
 	}
@@ -263,7 +291,7 @@ function addToPreferences() {
 	let preferenceButtons = this.parentElement.getElementsByClassName("preferenceButton");
 
 	for (let i = 0; i < preferenceButtons.length; i++) {
-		if (preferenceButtons[i].classList.contains(ACTIVE_CLASSNAME)) {
+		if (preferenceButtons[i].classList.contains(ACITVE_CLASSNAME)) {
 			removeHightlight(preferenceButtons[i]);
 			generatePreferenceDetails(preferenceButtons[i]);
 		}
@@ -281,34 +309,55 @@ function removeHightlight(preferenceButton) {
 	preferenceButton.className = preferenceButton.className.replace(" active", "");
 }
 
-function generatePersonalisedSchedule() {
-	const ACTIVE_CLASSNAME = "active";
+function updatePersonalSchedule() {
+	const ACITVE_CLASSNAME = "active";
 	let preferences = [];
 	let preferenceButtons = document.getElementsByClassName("preferenceButton");
 
 	for (let i = 0; i < preferenceButtons.length; i++) {
-		if (preferenceButtons[i].classList.contains(ACTIVE_CLASSNAME)) {
+		if (preferenceButtons[i].classList.contains(ACITVE_CLASSNAME)) {
 			preferences.push(generatePreferenceDetails(preferenceButtons[i]));
 		}
 	}
 
 	if (preferences.length === 0) {
-		// displayMessage("не сте избрали никакви събития!");
-		goToPersonalSchedulePage("personal-schedule.html");
+		displayMessage("грешка : моля изберете действие за събитието");
 		return;
 	}
 
-	console.log("preferences");
-	console.log(preferences);
+	// console.log("preferences");
+	// console.log(preferences);
 
-	const LOAD_SCHEDULE_URL = "php/api.php/generatePersonalSchedule";
-	const LOAD_SCHEDULE_METHOD = "POST";
+	const UPDATE_SCHEDULE_URL = "php/api.php/updatePersonalSchedule";
+	const UPDATE_SCHEDULE_METHOD = "POST";
 
-	ajaxPersonalScheduleRequest(
-		LOAD_SCHEDULE_URL,
-		LOAD_SCHEDULE_METHOD,
+	ajaxUpdatePersonalScheduleRequest(
+		UPDATE_SCHEDULE_URL,
+		UPDATE_SCHEDULE_METHOD,
 		`preferencesData=${JSON.stringify(preferences)}`
 	);
+}
+
+function ajaxUpdatePersonalScheduleRequest(url, method, data) {
+	let xhr = new XMLHttpRequest();
+
+	xhr.addEventListener("load", () => ajaxUpdatePersonalScheduleHandler(xhr));
+
+	xhr.open(method, url, true);
+	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhr.send(data);
+}
+
+function ajaxUpdatePersonalScheduleHandler(xhr) {
+	let response = JSON.parse(xhr.responseText);
+
+	if (response.success) {
+		console.log("success update personalised schedule");
+		goToPersonalSchedulePage("personal-schedule.html");
+	} else {
+		console.log("error : generate personalised schedule");
+		displayMessage("грешка : невъзможност за обновяваве на персонален график");
+	}
 }
 
 function generatePreferenceDetails(preferenceButton) {
@@ -317,40 +366,48 @@ function generatePreferenceDetails(preferenceButton) {
 
 	let event = preferenceButton.parentElement.parentElement;
 
-	return {
+	let preferenceObj = {
 		presentationTheme: event.getElementsByClassName(THEME_CLASSNAME)[0].innerText,
 		preferenceType: preferenceButton.classList[PREFERENCE_CLASSNAME_INDEX],
 	};
+
+	return preferenceObj;
 }
 
-function ajaxPersonalScheduleRequest(url, method, data) {
+function logoutRequest() {
+	const LOGOUT_URL = "php/api.php/logout";
+	const LOGOUT_METHOD = "POST";
+
+	ajaxLogoutRequest(LOGOUT_URL, LOGOUT_METHOD);
+}
+
+function ajaxLogoutRequest(url, method, data) {
 	let xhr = new XMLHttpRequest();
 
-	xhr.addEventListener("load", () => ajaxPersonalScheduleHandler(xhr));
+	xhr.addEventListener("load", () => ajaxLogoutHandler(xhr));
 
 	xhr.open(method, url, true);
 	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xhr.send(data);
 }
 
-function ajaxPersonalScheduleHandler(xhr) {
-	let responseText = JSON.parse(xhr.responseText);
+function ajaxLogoutHandler(xhr) {
+	let response = JSON.parse(xhr.responseText);
 
-	if (responseText.success) {
-		console.log("success generate personalised schedule");
-		goToPersonalSchedulePage("personal-schedule.html");
+	if (response.success) {
+		console.log("success : logout request");
+		goToLoginPage("index.html");
 	} else {
-		displayMessage("грешка : невъзможност за генеране на персонален график");
-		console.log("error : generate personalised schedule");
+		console.log("error : logout request");
 	}
 }
 
-function goToPersonalSchedulePage(pageUrl) {
-	window.location = pageUrl;
+function goToSchedulePage(schedulePageUrl) {
+	window.location = schedulePageUrl;
 }
 
-function logoutRequest() {
-	goToLoginPage("index.html");
+function goToPersonalSchedulePage(schedulePageUrl) {
+	window.location = schedulePageUrl;
 }
 
 function goToLoginPage(loginPageUrl) {

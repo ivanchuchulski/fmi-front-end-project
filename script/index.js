@@ -1,5 +1,3 @@
-// TODO
-// make error messages in bulgarian
 (function () {
 	let registerButton = document.getElementById("register-button");
 	let enterButton = document.getElementById("enter-button");
@@ -18,31 +16,20 @@ function register(clickEvent) {
 			passwordRegister: null,
 		};
 
-		// Qwerty1234
 		formData["emailRegister"] = validateEmail("register-email");
 		formData["usernameRegister"] = validateUsername("register-username");
 		formData["passwordRegister"] = validatePassword("register-password");
 		let passwordRepeatedRegister = validatePasswordRepeated("register-password-repeated");
-
-		console.log(formData["passwordRegister"]);
-		console.log(passwordRepeatedRegister);
-
-
 
 		checkIfPasswordsMatch(formData["passwordRegister"], passwordRepeatedRegister);
 
 		console.log("formData :");
 		printObject(formData);
 
-        const REGISTER_REQUEST_URL = "php/api.php/registration";
-        const REGISTER_REQUEST_URL = "https://mockend.com/ivanchuchulski/fmi-front-end-project/users";
-        
 		const REGISTER_METHOD = "POST";
-		sendRegistrationRequest(
-			REGISTER_REQUEST_URL,
-			REGISTER_METHOD,
-			`formData=${JSON.stringify(formData)}`
-		);
+        const REGISTER_REQUEST_URL = "https://jsonplaceholder.typicode.com/users";
+
+		sendRegistrationRequest(REGISTER_REQUEST_URL, REGISTER_METHOD, `formData=${JSON.stringify(formData)}`);
 	} catch (exception) {
 		displayRegistrationError(exception);
 	}
@@ -63,7 +50,11 @@ function login(clickEvent) {
 		console.log("formData :");
 		printObject(formData);
 
-		const LOGIN_REQUEST_URL = "php/api.php/login";
+
+		// can't make a POST request to this for now
+		// const LOGIN_REQUEST_URL = "https://my-json-server.typicode.com/ivanchuchulski/events-db/users";
+
+		const LOGIN_REQUEST_URL = "https://jsonplaceholder.typicode.com/users";
 		const LOGIN_METHOD = "POST";
 
 		sendLoginRequest(LOGIN_REQUEST_URL, LOGIN_METHOD, `formData=${JSON.stringify(formData)}`);
@@ -140,7 +131,7 @@ function validatePassword(elementId) {
 function validatePasswordRepeated(elementId) {
 	try {
         return validatePassword(elementId);
-    } 
+    }
     catch (exception) {
         const pattern = `паролата`;
         const regex = new RegExp(pattern);
@@ -218,7 +209,7 @@ function removeHTMLSpecialCharacters(str) {
 function sendRegistrationRequest(url, method, data) {
 	let xhr = new XMLHttpRequest();
 
-	xhr.addEventListener("load", (r) => registrationRequestHandler(xhr));
+	xhr.addEventListener("load", () => registrationRequestHandler(xhr));
 
 	xhr.open(method, url, true);
 	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -228,7 +219,7 @@ function sendRegistrationRequest(url, method, data) {
 function sendLoginRequest(url, method, data) {
 	let xhr = new XMLHttpRequest();
 
-	xhr.addEventListener("load", (r) => loginRequestHandler(xhr));
+	xhr.addEventListener("load", () => loginRequestHandler(xhr));
 
 	xhr.open(method, url, true);
 	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -238,6 +229,8 @@ function sendLoginRequest(url, method, data) {
 function registrationRequestHandler(xhr) {
 	let response = JSON.parse(xhr.responseText);
 
+	console.log(response);
+
 	if (response.success) {
 		console.log("success");
 		//changed from 'registration' to match form id
@@ -245,18 +238,23 @@ function registrationRequestHandler(xhr) {
 		regForm.reset();
 		displayRegistrationError("успешна регистрация");
 	} else {
+		displayRegistrationError('неуспешна регистация');
 		displayRegistrationError(response.error);
 	}
 }
 
 function loginRequestHandler(xhr) {
-	let response = JSON.parse(xhr.responseText);
+	// maybe for login the status should be 200, but can't really mock the response code
+	const createdResponseCode = 201;
 
-	if (response.success) {
+	let response = JSON.parse(xhr.responseText);
+	let responseCode = xhr.status;
+
+	if (responseCode === createdResponseCode) {
 		console.log("success");
 		displaySchedulePage("schedule.html");
 	} else {
-		displayLoginError(response.error);
+		displayLoginError('неуспешна регистация');
 	}
 }
 
