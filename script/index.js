@@ -17,21 +17,18 @@ function register(clickEvent) {
 		};
 
 		formData["emailRegister"] = validateEmail("register-email");
-		formData["usernameRegister"] = validateUsername("register-username");
-		formData["passwordRegister"] = validatePassword("register-password");
-		let passwordRepeatedRegister = validatePasswordRepeated("register-password-repeated");
+		formData["usernameRegister"] = validateRegistrationUsername("register-username");
+		formData["passwordRegister"] = validateRegistrationPassword("register-password");
+		let passwordRepeatedRegister = validateRegistrationPasswordRepeated("register-password-repeated");
 
 		checkIfPasswordsMatch(formData["passwordRegister"], passwordRepeatedRegister);
-
-		console.log("formData :");
-		printObject(formData);
 
 		const REGISTER_METHOD = "POST";
         const REGISTER_REQUEST_URL = "https://jsonplaceholder.typicode.com/users";
 
 		sendRegistrationRequest(REGISTER_REQUEST_URL, REGISTER_METHOD, `formData=${JSON.stringify(formData)}`);
 	} catch (exception) {
-		displayRegistrationError(exception);
+		displayRegistrationErrorMessage(exception);
 	}
 }
 
@@ -47,10 +44,6 @@ function login(clickEvent) {
 		formData["usernameLogin"] = validateLoginUsername("login-username");
 		formData["passwordLogin"] = validateLoginPassword("login-password");
 
-		console.log("formData :");
-		printObject(formData);
-
-
 		// can't make a POST request to this for now
 		// const LOGIN_REQUEST_URL = "https://my-json-server.typicode.com/ivanchuchulski/events-db/users";
 
@@ -64,9 +57,9 @@ function login(clickEvent) {
 }
 
 function validateEmail(elementId) {
-	const lowerLimit = 5;
-	const upperLimit = 50;
-	const pattern = `^[A-Za-z0-9_-]{${lowerLimit},${upperLimit}}@[a-z]+\.[a-z]+$`;
+	const EMAIL_LENGTH_LOWER_LIMIT = 5;
+	const EMAIL_LENGTH_UPPER_LIMIT = 50;
+	const pattern = `^[A-Za-z0-9_-]{${EMAIL_LENGTH_LOWER_LIMIT},${EMAIL_LENGTH_UPPER_LIMIT}}@[a-z]+\.[a-z]+$`;
 	const regex = new RegExp(pattern);
 
 	let email = document.getElementById(`${elementId}`).value;
@@ -76,16 +69,16 @@ function validateEmail(elementId) {
 	}
 
 	if (!email.match(regex)) {
-		throw "грешка: имейлът трябва да е във формат example@domain.com";
+		throw "грешка: имейлът трябва да е във формат example0123-_@domain.com";
 	}
 
 	return formatInput(email);
 }
 
-function validateUsername(elementId) {
-	const lowerLimit = 3;
-	const upperLimit = 50;
-	const pattern = `^[A-Za-z0-9_-]{${lowerLimit},${upperLimit}}$`;
+function validateRegistrationUsername(elementId) {
+	const PASSWORD_LENGTH_LOWER_LIMIT = 3;
+	const EMAIL_LENGTH_UPPER_LIMIT = 50;
+	const pattern = `^[A-Za-z0-9_-]{${PASSWORD_LENGTH_LOWER_LIMIT},${EMAIL_LENGTH_UPPER_LIMIT}}$`;
 	const regex = new RegExp(pattern);
 
 	let username = document.getElementById(`${elementId}`).value;
@@ -101,7 +94,7 @@ function validateUsername(elementId) {
 	return formatInput(username);
 }
 
-function validatePassword(elementId) {
+function validateRegistrationPassword(elementId) {
 	const lowerLimit = 6;
 	const upperLimit = 20;
 	const pattern = `^[A-Za-z0-9]{${lowerLimit},${upperLimit}}$`;
@@ -128,14 +121,12 @@ function validatePassword(elementId) {
 	return formatInput(password);
 }
 
-function validatePasswordRepeated(elementId) {
+function validateRegistrationPasswordRepeated(elementId) {
 	try {
-        return validatePassword(elementId);
+        return validateRegistrationPassword(elementId);
     }
     catch (exception) {
         const pattern = `паролата`;
-        const regex = new RegExp(pattern);
-
         let temp = exception.replace(pattern, 'повторената парола');
         console.log(temp);
         throw temp;
@@ -216,6 +207,24 @@ function sendRegistrationRequest(url, method, data) {
 	xhr.send(data);
 }
 
+function registrationRequestHandler(xhr) {
+	const createdResponseCode = 201;
+
+	let responseCode = xhr.status;
+	// let responseText = JSON.parse(xhr.responseText);
+
+	if (responseCode === createdResponseCode) {
+		console.log("success register");
+		displayRegistrationSuccessMessage("успешна регистрация!");
+
+		let registrationForm = document.getElementById("registration-form");
+		registrationForm.reset();
+	} else {
+		console.log("error : register");
+		displayRegistrationErrorMessage('неуспешна регистация!');
+	}
+}
+
 function sendLoginRequest(url, method, data) {
 	let xhr = new XMLHttpRequest();
 
@@ -226,32 +235,15 @@ function sendLoginRequest(url, method, data) {
 	xhr.send(data);
 }
 
-function registrationRequestHandler(xhr) {
-	let response = JSON.parse(xhr.responseText);
-
-	console.log(response);
-
-	if (response.success) {
-		console.log("success");
-		//changed from 'registration' to match form id
-		let regForm = document.getElementById("registration-form");
-		regForm.reset();
-		displayRegistrationError("успешна регистрация");
-	} else {
-		displayRegistrationError('неуспешна регистация');
-		displayRegistrationError(response.error);
-	}
-}
-
 function loginRequestHandler(xhr) {
 	// maybe for login the status should be 200, but can't really mock the response code
 	const createdResponseCode = 201;
 
-	let response = JSON.parse(xhr.responseText);
 	let responseCode = xhr.status;
+	// let responseText = JSON.parse(xhr.responseText);
 
 	if (responseCode === createdResponseCode) {
-		console.log("success");
+		console.log("success login");
 		displaySchedulePage("schedule.html");
 	} else {
 		displayLoginError('неуспешна регистация');
@@ -262,14 +254,24 @@ function displaySchedulePage(pageURL) {
 	window.location = pageURL;
 }
 
-function displayRegistrationError(error) {
-	let errorLabel = document.getElementById("registration-error");
-	errorLabel.innerHTML = error;
+function displayRegistrationSuccessMessage(message) {
+	let errorLabel = document.getElementById("registration-label");
+
+	errorLabel.style.color = "green";
+	errorLabel.innerHTML = message;
 }
 
-function displayLoginError(error) {
+function displayRegistrationErrorMessage(message) {
+	let errorLabel = document.getElementById("registration-label");
+
+	errorLabel.style.color = "red";
+	errorLabel.innerHTML = message;
+}
+
+function displayLoginError(message) {
 	let errorLabel = document.getElementById("login-error");
-	errorLabel.innerHTML = error;
+
+	errorLabel.innerHTML = message;
 }
 
 function printObject(object) {

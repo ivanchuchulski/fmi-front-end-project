@@ -1,4 +1,3 @@
-// using the javascript immediately-invoked function expression (IIFE)
 (function () {
 	window.onload = () => loadPersonalEvents();
 
@@ -49,7 +48,7 @@ function drawPersonalEvents(responseText) {
 	let eventParent = document.getElementById("personal-events");
 
 	let username = "test"
-	document.getElementById("username").innerText += " " + username + "!";
+	document.getElementById("username").innerText += ", " + username + "!";
 
 	let preferencesList = JSON.parse(responseText);
 
@@ -80,6 +79,7 @@ function drawPersonalEvents(responseText) {
 
 		let willGoButton = document.createElement("button");
 		let couldGoButton = document.createElement("button");
+		let removeButton = document.createElement("button");
 
 		eventElement.className += "event";
 		details.className += "details";
@@ -88,6 +88,7 @@ function drawPersonalEvents(responseText) {
 
 		willGoButton.className += "preferenceButton willAttend";
 		couldGoButton.className += "preferenceButton couldAttend";
+		removeButton.className += "preferenceButton cancelAttend";
 
 		details.innerHTML = `
 			<p class="theme">${theme}</p>
@@ -105,6 +106,7 @@ function drawPersonalEvents(responseText) {
 
 		willGoButton.innerText += "ще отида";
 		couldGoButton.innerText += "може би ще отида";
+		removeButton.innerText += "премахни събитието";
 
 		eventParent.appendChild(eventElement);
 
@@ -114,9 +116,11 @@ function drawPersonalEvents(responseText) {
 
 		preference.appendChild(willGoButton);
 		preference.appendChild(couldGoButton);
+		preference.appendChild(removeButton);
 
 		willGoButton.addEventListener("click", addToPreferences);
 		couldGoButton.addEventListener("click", addToPreferences);
+		removeButton.addEventListener("click", addToPreferences);
 
 		// by default hide the place address link
 		timeinfo.getElementsByClassName("place-address")[0].style.display = "none";
@@ -127,16 +131,16 @@ function drawPersonalEvents(responseText) {
 		if (preferenceType === "willAttend") {
 			addHighlight(willGoButton);
 
-			willGoButton.removeEventListener("click", addToPreferences);
+			// willGoButton.removeEventListener("click", addToPreferences);
 
-			couldGoButton.style.display = "none";
+			// couldGoButton.style.display = "none";
 		}
 		else {
 			addHighlight(couldGoButton);
 
-			couldGoButton.removeEventListener("click", addToPreferences);
+			// couldGoButton.removeEventListener("click", addToPreferences);
 
-			willGoButton.style.display = "none";
+			// willGoButton.style.display = "none";
 		}
 	});
 }
@@ -277,45 +281,53 @@ function filterEventsByPreference(events, preferenceFilter) {
 	}
 }
 
-
-
 function addToPreferences() {
-	const ACITVE_CLASSNAME = "active";
+	const ACTIVE_CLASSNAME = "active";
+    const CANCEL_CLASSNAME = "cancelAttend";
 
 	// first check if the this button is active
-	if (this.classList.contains(ACITVE_CLASSNAME)) {
-		removeHightlight(this);
-		return;
+	if (this.classList.contains(ACTIVE_CLASSNAME) && !this.classList.contains(CANCEL_CLASSNAME)) {
+		removeHighlight(this);
+
+		let preferenceButtons = this.parentElement.getElementsByClassName("preferenceButton");
+		for (let i = 0; i < preferenceButtons.length; i++) {
+			if (preferenceButtons[i].classList.contains(CANCEL_CLASSNAME)) {
+				addHighlight(preferenceButtons[i]);
+				return;
+			}
+		}
 	}
+
+    if (this.classList.contains(ACTIVE_CLASSNAME)) {
+        removeHighlight(this);
+    }
 
 	let preferenceButtons = this.parentElement.getElementsByClassName("preferenceButton");
 
 	for (let i = 0; i < preferenceButtons.length; i++) {
-		if (preferenceButtons[i].classList.contains(ACITVE_CLASSNAME)) {
-			removeHightlight(preferenceButtons[i]);
-			generatePreferenceDetails(preferenceButtons[i]);
+		if (preferenceButtons[i].classList.contains(ACTIVE_CLASSNAME)) {
+			removeHighlight(preferenceButtons[i]);
 		}
 	}
 
 	addHighlight(this);
-	generatePreferenceDetails(this);
 }
 
 function addHighlight(preferenceButton) {
 	preferenceButton.className += " active";
 }
 
-function removeHightlight(preferenceButton) {
+function removeHighlight(preferenceButton) {
 	preferenceButton.className = preferenceButton.className.replace(" active", "");
 }
 
 function updatePersonalSchedule() {
-	const ACITVE_CLASSNAME = "active";
+	const ACTIVE_CLASSNAME = "active";
 	let preferences = [];
 	let preferenceButtons = document.getElementsByClassName("preferenceButton");
 
 	for (let i = 0; i < preferenceButtons.length; i++) {
-		if (preferenceButtons[i].classList.contains(ACITVE_CLASSNAME)) {
+		if (preferenceButtons[i].classList.contains(ACTIVE_CLASSNAME)) {
 			preferences.push(generatePreferenceDetails(preferenceButtons[i]));
 		}
 	}

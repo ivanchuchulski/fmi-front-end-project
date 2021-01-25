@@ -62,7 +62,7 @@ h4 {
 }
 
 
-#registration-error, #login-error {
+#registration-label, #login-error {
     display: block;
     padding: 7px;
 
