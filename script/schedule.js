@@ -225,16 +225,36 @@ function generateScheduleByFilters() {
 	}
 }
 
-function filterEventsByDay(events, dayFilter) {
-	for (let index = 0; index < events.length; index++) {
-		const event = events[index];
+function displayAllEvents() {
+	let events = document.getElementsByClassName("event");
 
-		let eventDay = event.getElementsByClassName("day-number")[0].innerText.split(" ")[1];
+	for (let event of events) {
+        showEvent(event);
+	}
+}
+
+function filterEventsByDay(events, dayFilter) {
+    for (let event of events) {
+		let eventDay = event.getElementsByClassName("dayNumber")[0].innerText.split(" ")[1];
 
 		if (eventDay !== dayFilter) {
 			hideEvent(event);
 		}
 	}
+}
+
+function filterEventsByGroup(events, groupFilter) {
+    for (let event of events) {
+		let eventGroup = event.getElementsByClassName("groupNumber")[0].innerText.split(" ")[1];
+
+		if (eventGroup !== groupFilter) {
+			hideEvent(event);
+		}
+	}
+}
+
+function showEvent(event) {
+	event.style.display = "flex";
 }
 
 function hideEvent(event) {
@@ -246,19 +266,6 @@ function removeFilters() {
 	removeSelectedFilters();
 }
 
-function displayAllEvents() {
-	let daySelectElement = document.getElementById("filter-by-day");
-	let groupSelectElement = document.getElementById("filter-by-group");
-
-	let events = document.getElementsByClassName("event");
-	//console.log(events);
-
-	for (let index = 0; index < events.length; index++) {
-		let element = events[index];
-		element.style.display = "flex";
-	}
-}
-
 function removeSelectedFilters() {
 	let daySelectElement = document.getElementById("filter-by-day");
 	let groupSelectElement = document.getElementById("filter-by-group");
@@ -267,25 +274,12 @@ function removeSelectedFilters() {
 	groupSelectElement.selectedIndex = 0;
 }
 
-function filterEventsByGroup(events, groupFilter) {
-	for (let index = 0; index < events.length; index++) {
-		const event = events[index];
-		let eventGroup = event.getElementsByClassName("group-number")[0].innerText.split(" ")[1];
-
-		//console.log(eventDay);
-
-		if (eventGroup !== groupFilter) {
-			hideEvent(event);
-		}
-	}
-}
-
 function addToPreferences() {
 	const ACTIVE_CLASSNAME = "active";
 
 	// first check if the this button is active
 	if (this.classList.contains(ACTIVE_CLASSNAME)) {
-		removeHightlight(this);
+		removeHighlight(this);
 		return;
 	}
 
@@ -293,7 +287,7 @@ function addToPreferences() {
 
 	for (let i = 0; i < preferenceButtons.length; i++) {
 		if (preferenceButtons[i].classList.contains(ACTIVE_CLASSNAME)) {
-			removeHightlight(preferenceButtons[i]);
+			removeHighlight(preferenceButtons[i]);
 			generatePreferenceDetails(preferenceButtons[i]);
 		}
 	}
@@ -306,7 +300,7 @@ function addHighlight(preferenceButton) {
 	preferenceButton.className += " active";
 }
 
-function removeHightlight(preferenceButton) {
+function removeHighlight(preferenceButton) {
 	preferenceButton.className = preferenceButton.className.replace(" active", "");
 }
 
