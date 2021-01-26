@@ -1,19 +1,20 @@
+'use strict';
 (function () {
 	window.onload = () => loadEvents();
 
 	addNavbarHandlers();
 
-	let personalScheduleButton = document
-		.getElementById("make-personal")
-		.addEventListener("click", generatePersonalisedSchedule);
+	let personalScheduleButton =
+        document.getElementById("make-personal")
+                .addEventListener("click", generatePersonalisedSchedule);
 
-	let applyFilterButton = document
-		.getElementById("apply-filter")
-		.addEventListener("click", generateScheduleByFilters);
+	let applyFilterButton =
+        document.getElementById("apply-filter")
+                .addEventListener("click", generateScheduleByFilters);
 
-	let resetFilterButton = document
-		.getElementById("reset-filter")
-		.addEventListener("click", removeFilters);
+	let resetFilterButton =
+        document.getElementById("reset-filter")
+                .addEventListener("click", removeFilters);
 })();
 
 function loadEvents() {
@@ -154,26 +155,20 @@ function showMessageOnLeave() {
 
 function addNavbarHandlers() {
 	let schedulePageButton = document.getElementById("schedule-page-button");
-	schedulePageButton.addEventListener("click", () => {
-		window.location = "schedule.html";
-	});
-
+	schedulePageButton.addEventListener("click", () => window.location = "schedule.html");
 	addHighlight(schedulePageButton);
 
-	let personalSchedule = document
-		.getElementById("personalised-schedule-button")
-		.addEventListener("click", () => {
-			window.location = "personal-schedule.html";
-		});
+	let personalSchedule =
+        document.getElementById("personalised-schedule-button")
+                .addEventListener("click", () => window.location = "personal-schedule.html");
 
-	let statisticsButton = document
-		.getElementById("view-statistics")
-		.addEventListener("click", () => {
-			window.location = "statistics.html";
-		});
+	let statisticsButton =
+        document.getElementById("view-statistics")
+                .addEventListener("click", () => window.location = "statistics.html");
 
-	let logoutButton = document.getElementById("logout-button")
-		.addEventListener("click", logoutRequest);
+	let logoutButton =
+        document.getElementById("logout-button")
+                .addEventListener("click", logoutRequest);
 }
 
 function generateScheduleByFilters() {

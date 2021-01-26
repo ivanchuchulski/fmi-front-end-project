@@ -16,7 +16,7 @@ function register(clickEvent) {
 		formData["email"] = validateRegistrationEmail("register-email");
 		formData["username"] = validateRegistrationUsername("register-username");
 		formData["password"] = validateRegistrationPassword("register-password");
-		let passwordRepeatedRegister = validateRegistrationPasswordRepeated("register-password-repeated");
+		let passwordRepeatedRegister = getRegistrationPasswordRepeated("register-password-repeated");
 
 		checkIfPasswordsMatch(formData["password"], passwordRepeatedRegister);
 
@@ -115,16 +115,10 @@ function validateRegistrationPassword(elementId) {
 	return formatInput(password);
 }
 
-function validateRegistrationPasswordRepeated(elementId) {
-	try {
-        return validateRegistrationPassword(elementId);
-    }
-    catch (exception) {
-        const pattern = `паролата`;
-        let temp = exception.replace(pattern, 'повторената парола');
-        console.log(temp);
-        throw temp;
-    }
+function getRegistrationPasswordRepeated(elementId) {
+	let passwordRepeated = document.getElementById(`${elementId}`).value;
+
+	return formatInput(passwordRepeated);
 }
 
 function checkIfPasswordsMatch(password, passwordRepeated) {
@@ -178,7 +172,7 @@ function removeSlashes(str) {
 }
 
 function removeHTMLSpecialCharacters(str) {
-	let htmlSpecialCharactersMap = {
+	const HTML_SPECIAL_CHARACTERS_MAP = {
 		"&": "&amp;",
 		"<": "&lt;",
 		">": "&gt;",
@@ -186,9 +180,7 @@ function removeHTMLSpecialCharacters(str) {
 		"'": "&#039;",
 	};
 
-	return str.replace(/[&<>"']/g, function (symbol) {
-		return htmlSpecialCharactersMap[symbol];
-	});
+	return str.replace(/[&<>"']/g, symbol => HTML_SPECIAL_CHARACTERS_MAP[symbol]);
 }
 
 function sendRegistrationRequest(url, method, data) {
