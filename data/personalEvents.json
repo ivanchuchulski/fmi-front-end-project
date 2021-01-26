@@ -1,0 +1,52 @@
+[
+    {
+        "theme": "WebSocket",
+        "presentDate": "2020-04-29 10:15:00",
+        "dayNumber": "1",
+        "presenterName": "Иван Лучев",
+        "facultyNumber": "62100",
+        "groupNumber": "1",
+        "place": "https://learn.fmi.uni-sofia.bg/mod/bigbluebuttonbn/view.php?id=143791",
+        "preferenceType": "willAttend"
+    },
+    {
+        "theme": "Компресиране на изображения в уеб",
+        "presentDate": "2020-04-29 10:30:00",
+        "dayNumber": "1",
+        "presenterName": "Васил Жухов",
+        "facultyNumber": "62101",
+        "groupNumber": "2",
+        "place": "https://meet.jit.si/presentation",
+        "preferenceType": "couldAttend"
+    },
+    {
+        "theme": "HTTPS и HTTP - сигурност в PHP",
+        "presentDate": "2020-04-29 10:45:00",
+        "dayNumber": "1",
+        "presenterName": "Петър Янакиев",
+        "facultyNumber": "62102",
+        "groupNumber": "3",
+        "place": "https://meet.jit.si/referat-meeting",
+        "preferenceType": "couldAttend"
+    },
+    {
+        "theme": "Laravel Web Framework",
+        "presentDate": "2020-04-29 11:00:00",
+        "dayNumber": "1",
+        "presenterName": "Таня Христова",
+        "facultyNumber": "62103",
+        "groupNumber": "4",
+        "place": "https://learn.fmi.uni-sofia.bg/mod/bigbluebuttonbn/view.php?id=143791",
+        "preferenceType": "willAttend"
+    },
+    {
+        "theme": "Оценка на JavaScript приложенията",
+        "presentDate": "2020-04-29 11:15:00",
+        "dayNumber": "1",
+        "presenterName": "Радост Дрънгова",
+        "facultyNumber": "62104",
+        "groupNumber": "2",
+        "place": "https://us04web.zoom.us/j/74439367979?pwd=SCtPQ1BnMWJLUHowS2NzaTNnVHBHQT09",
+        "preferenceType": "couldAttend"
+    }
+]

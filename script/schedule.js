@@ -19,7 +19,8 @@
 
 function loadEvents() {
 	const LOAD_SCHEDULE_METHOD = "GET";
-	const LOAD_SCHEDULE_URL = "https://my-json-server.typicode.com/ivanchuchulski/events-db/events";
+	// const LOAD_SCHEDULE_URL = "https://my-json-server.typicode.com/ivanchuchulski/events-db/events";
+	const LOAD_SCHEDULE_URL = "data/events.json";
 
 	loadEventsRequest(LOAD_SCHEDULE_URL, LOAD_SCHEDULE_METHOD);
 }
@@ -60,94 +61,127 @@ function drawEvents(responseText) {
 
 	let eventParent = document.getElementById("event-list");
 
-	Object.keys(eventList).forEach((event) => {
-		let theme = eventList[event].theme;
-		let presenterName = eventList[event].presenterName;
-		let place = eventList[event].place;
+	for (let event of eventList) {
+		let {theme, presenterName, place, facultyNumber, groupNumber, dayNumber, presentDate} = event;
 
-		let facultyNumber = eventList[event].facultyNumber;
-		let groupNumber = eventList[event].groupNumber;
-		let dayNumber = eventList[event].dayNumber;
+		let date = new Date(presentDate);
+		let eventTime = date.toLocaleTimeString().split(":").splice(0, 2).join(":");
+		let yearMonthDay = date.toDateString().split(" ").splice(1, 3).join(" ");
 
-		// building date from presentations_data date
-		let date = new Date(eventList[event].presentDate);
+		let eventDateFormatted = eventTime + ", " + yearMonthDay;
 
-		let time = date.toLocaleTimeString();
-		let temp = time.split(":");
-		time = temp[0] + ":" + temp[1];
+		let eventElement = document.createElement("section");
 
-		let ymd = date.toDateString();
-		let tempYMD = ymd.split(" ");
-		ymd = `${tempYMD[2]} ${tempYMD[1]} ${tempYMD[3]}`;
+		let details = document.createElement("section");
+		let themeParagraph = document.createElement("p")
+		let presenterParagraph = document.createElement("p")
+		let groupNumberParagraph = document.createElement("p")
 
-		let presentDate = time + " " + ymd;
+		let timeinfo = document.createElement("section");
+		let dateParagraph = document.createElement("p");
+		let dayParagraph = document.createElement("p");
+		let presentationSiteParagraph = document.createElement("p");
+		let placeLink = document.createElement("a");
+		let placeMessageSpan = document.createElement("span");
+		let placeAddressSpan = document.createElement("span");
 
-		let eventElement = document.createElement("div");
-
-		let details = document.createElement("div");
-		let timeinfo = document.createElement("div");
-		let preference = document.createElement("div");
-
+		let preference = document.createElement("section");
 		let willGoButton = document.createElement("button");
 		let couldGoButton = document.createElement("button");
 
 		eventElement.className += "event";
 
+		// details section
 		details.className += "details";
+
+		themeParagraph.className += "theme";
+		themeParagraph.innerText += theme;
+
+		presenterParagraph.className += "presenter";
+		presenterParagraph.innerText += `${presenterName}, ${facultyNumber}`;
+
+		groupNumberParagraph.className += "groupNumber";
+		groupNumberParagraph.innerText += `Група ${groupNumber}`;
+
+		// timeinfo section
 		timeinfo.className += "timeinfo";
+
+		dateParagraph.className += "date";
+		dateParagraph.innerText += eventDateFormatted;
+
+		dayParagraph.className += "dayNumber";
+		dayParagraph.innerText += `Ден ${dayNumber}`;
+
+		presentationSiteParagraph.className += "presentationSite";
+
+		placeLink.href = place;
+		placeLink.target = "_blank";
+
+		placeMessageSpan.className = "placeMessage";
+		placeMessageSpan.innerText += "Място на провеждане";
+
+		placeAddressSpan.className = "placeAddress";
+		placeAddressSpan.innerText += place
+
+		// preferences section
 		preference.className += "preference";
 
 		willGoButton.className += "preferenceButton willAttend";
-		couldGoButton.className += "preferenceButton couldAttend";
-
-		details.innerHTML = `
-		<p class="theme">${theme}</p>
-		<p class="presenter">${presenterName}, ${facultyNumber}</p>
-		<p class="group-number"> Група ${groupNumber}</p>`;
-
-		timeinfo.innerHTML = `
-		<p class="date">${presentDate}</p>
-		<p class="day-number">Ден ${dayNumber}</p>
-		<p class="presentationSite">
-			<a href=${place} target="_blank">
-			<span class="place-message">Място на провеждане</span>
-			<span class="place-address">${place}</span>
-		</p>`;
-
 		willGoButton.innerText += "ще отида";
+
+		couldGoButton.className += "preferenceButton couldAttend";
 		couldGoButton.innerText += "може би ще отида";
 
-		eventParent.appendChild(eventElement);
+		// appending the elements in the DOM
+		// details section
+		details.appendChild(themeParagraph);
+		details.appendChild(presenterParagraph);
+		details.appendChild(groupNumberParagraph);
 
+		// timeinfo section
+		presentationSiteParagraph.appendChild(placeLink);
+		placeLink.appendChild(placeMessageSpan);
+		placeLink.appendChild(placeAddressSpan);
+
+		timeinfo.appendChild(dateParagraph);
+		timeinfo.appendChild(dayParagraph);
+		timeinfo.appendChild(presentationSiteParagraph);
+
+		// preference section
+		preference.appendChild(willGoButton);
+		preference.appendChild(couldGoButton);
+
+		// event section
 		eventElement.appendChild(details);
 		eventElement.appendChild(timeinfo);
 		eventElement.appendChild(preference);
 
-		preference.appendChild(willGoButton);
-		preference.appendChild(couldGoButton);
 
+		eventParent.appendChild(eventElement);
+
+		// adding event listeners
 		willGoButton.addEventListener("click", addToPreferences);
 		couldGoButton.addEventListener("click", addToPreferences);
 
 		// by default hide the place address link
-		timeinfo.getElementsByClassName('place-address')[0].style.display = "none";
+		timeinfo.getElementsByClassName('placeAddress')[0].style.display = "none";
 
 		timeinfo.addEventListener("mouseover", showAddressOnHover);
 		timeinfo.addEventListener("mouseleave", showMessageOnLeave)
-	});
+	}
 }
 
 function showAddressOnHover() {
-	let placeMessageElement = this.getElementsByClassName('place-message')[0];
-	let placeAddressElement = this.getElementsByClassName("place-address")[0];
+	let placeMessageElement = this.getElementsByClassName('placeMessage')[0];
+	let placeAddressElement = this.getElementsByClassName("placeAddress")[0];
 
 	placeMessageElement.style.display = "none";
 	placeAddressElement.style.display = "inline";
 }
 
 function showMessageOnLeave() {
-	let placeMessageElement = this.getElementsByClassName('place-message')[0];
-	let placeAddressElement = this.getElementsByClassName("place-address")[0];
+	let placeMessageElement = this.getElementsByClassName('placeMessage')[0];
+	let placeAddressElement = this.getElementsByClassName("placeAddress")[0];
 
 	placeMessageElement.style.display = "inline";
 	placeAddressElement.style.display = "none";
