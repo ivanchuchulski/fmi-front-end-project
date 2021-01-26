@@ -1,3 +1,4 @@
+'use strict';
 (function () {
 	let registerButton = document.getElementById("register-button");
 	let enterButton = document.getElementById("enter-button");
@@ -10,18 +11,14 @@ function register(clickEvent) {
 	try {
 		clickEvent.preventDefault();
 
-		let formData = {
-			emailRegister: null,
-			usernameRegister: null,
-			passwordRegister: null,
-		};
+		let formData = {};
 
-		formData["emailRegister"] = validateEmail("register-email");
-		formData["usernameRegister"] = validateRegistrationUsername("register-username");
-		formData["passwordRegister"] = validateRegistrationPassword("register-password");
+		formData["email"] = validateRegistrationEmail("register-email");
+		formData["username"] = validateRegistrationUsername("register-username");
+		formData["password"] = validateRegistrationPassword("register-password");
 		let passwordRepeatedRegister = validateRegistrationPasswordRepeated("register-password-repeated");
 
-		checkIfPasswordsMatch(formData["passwordRegister"], passwordRepeatedRegister);
+		checkIfPasswordsMatch(formData["password"], passwordRepeatedRegister);
 
 		const REGISTER_METHOD = "POST";
         const REGISTER_REQUEST_URL = "https://jsonplaceholder.typicode.com/users";
@@ -36,19 +33,16 @@ function login(clickEvent) {
 	try {
 		clickEvent.preventDefault();
 
-		let formData = {
-			usernameLogin: null,
-			passwordLogin: null,
-		};
+		let formData = {};
 
-		formData["usernameLogin"] = validateLoginUsername("login-username");
-		formData["passwordLogin"] = validateLoginPassword("login-password");
+		formData["username"] = validateLoginUsername("login-username");
+		formData["password"] = validateLoginPassword("login-password");
 
+		const LOGIN_METHOD = "POST";
 		// can't make a POST request to this for now
 		// const LOGIN_REQUEST_URL = "https://my-json-server.typicode.com/ivanchuchulski/events-db/users";
 
 		const LOGIN_REQUEST_URL = "https://jsonplaceholder.typicode.com/users";
-		const LOGIN_METHOD = "POST";
 
 		sendLoginRequest(LOGIN_REQUEST_URL, LOGIN_METHOD, `formData=${JSON.stringify(formData)}`);
 	} catch (exception) {
@@ -56,7 +50,7 @@ function login(clickEvent) {
 	}
 }
 
-function validateEmail(elementId) {
+function validateRegistrationEmail(elementId) {
 	const EMAIL_LENGTH_LOWER_LIMIT = 5;
 	const EMAIL_LENGTH_UPPER_LIMIT = 50;
 	const pattern = `^[A-Za-z0-9_-]{${EMAIL_LENGTH_LOWER_LIMIT},${EMAIL_LENGTH_UPPER_LIMIT}}@[a-z]+\.[a-z]+$`;
@@ -133,6 +127,12 @@ function validateRegistrationPasswordRepeated(elementId) {
     }
 }
 
+function checkIfPasswordsMatch(password, passwordRepeated) {
+	if (password !== passwordRepeated) {
+		throw "грешка: паролите трябва да съвпадат";
+	}
+}
+
 function validateLoginUsername(elementId) {
 	let username = document.getElementById(`${elementId}`).value;
 
@@ -151,12 +151,6 @@ function validateLoginPassword(elementId) {
 	}
 
 	return formatInput(password);
-}
-
-function checkIfPasswordsMatch(password, passwordRepeated) {
-	if (password !== passwordRepeated) {
-		throw "грешка: паролите трябва да съвпадат";
-	}
 }
 
 function formatInput(formField) {
@@ -208,12 +202,12 @@ function sendRegistrationRequest(url, method, data) {
 }
 
 function registrationRequestHandler(xhr) {
-	const createdResponseCode = 201;
+	const CREATED_RESPONSE_STATUS_CODE = 201;
 
-	let responseCode = xhr.status;
+	let responseStatusCode = xhr.status;
 	// let responseText = JSON.parse(xhr.responseText);
 
-	if (responseCode === createdResponseCode) {
+	if (responseStatusCode === CREATED_RESPONSE_STATUS_CODE) {
 		console.log("success register");
 		displayRegistrationSuccessMessage("успешна регистрация!");
 
@@ -237,12 +231,12 @@ function sendLoginRequest(url, method, data) {
 
 function loginRequestHandler(xhr) {
 	// maybe for login the status should be 200, but can't really mock the response code
-	const createdResponseCode = 201;
+	const CREATED_RESPONSE_STATUS_CODE = 201;
 
-	let responseCode = xhr.status;
+	let responseStatusCode = xhr.status;
 	// let responseText = JSON.parse(xhr.responseText);
 
-	if (responseCode === createdResponseCode) {
+	if (responseStatusCode === CREATED_RESPONSE_STATUS_CODE) {
 		console.log("success login");
 		displaySchedulePage("schedule.html");
 	} else {
@@ -255,21 +249,21 @@ function displaySchedulePage(pageURL) {
 }
 
 function displayRegistrationSuccessMessage(message) {
-	let errorLabel = document.getElementById("registration-label");
+	let errorLabel = document.getElementById("registration-message");
 
 	errorLabel.style.color = "green";
 	errorLabel.innerHTML = message;
 }
 
 function displayRegistrationErrorMessage(message) {
-	let errorLabel = document.getElementById("registration-label");
+	let errorLabel = document.getElementById("registration-message");
 
 	errorLabel.style.color = "red";
 	errorLabel.innerHTML = message;
 }
 
 function displayLoginError(message) {
-	let errorLabel = document.getElementById("login-error");
+	let errorLabel = document.getElementById("login-message");
 
 	errorLabel.innerHTML = message;
 }
