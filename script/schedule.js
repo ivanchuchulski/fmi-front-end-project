@@ -10,7 +10,7 @@
 
 	let applyFilterButton =
         document.getElementById("apply-filter")
-                .addEventListener("click", generateScheduleByFilters);
+                .addEventListener("click", applyFiltersToEvents);
 
 	let resetFilterButton =
         document.getElementById("reset-filter")
@@ -52,7 +52,7 @@ function loadEventsHandler(xhr) {
 
 function drawEvents(responseText) {
 	let username = "test";
-	document.getElementById("username").innerText += " " + username + "!";
+	document.getElementById("username").innerText += ", " + username + "!";
 
 	let eventList = JSON.parse(responseText);
 
@@ -156,7 +156,6 @@ function drawEvents(responseText) {
 		eventElement.appendChild(timeinfo);
 		eventElement.appendChild(preference);
 
-
 		eventParent.appendChild(eventElement);
 
 		// adding event listeners
@@ -167,7 +166,7 @@ function drawEvents(responseText) {
 		timeinfo.getElementsByClassName('placeAddress')[0].style.display = "none";
 
 		timeinfo.addEventListener("mouseover", showAddressOnHover);
-		timeinfo.addEventListener("mouseleave", showMessageOnLeave)
+		timeinfo.addEventListener("mouseleave", showMessageOnLeave);
 	}
 }
 
@@ -205,7 +204,7 @@ function addNavbarHandlers() {
                 .addEventListener("click", logoutRequest);
 }
 
-function generateScheduleByFilters() {
+function applyFiltersToEvents() {
 	let daySelectElement = document.getElementById("filter-by-day");
 	let groupSelectElement = document.getElementById("filter-by-group");
 
@@ -324,14 +323,16 @@ function generatePersonalisedSchedule() {
 	console.log("preferences");
 	console.log(preferences);
 
-	const LOAD_SCHEDULE_URL = "php/api.php/generatePersonalSchedule";
-	const LOAD_SCHEDULE_METHOD = "POST";
+	goToPersonalSchedulePage("personal-schedule.html");
 
-	ajaxPersonalScheduleRequest(
-		LOAD_SCHEDULE_URL,
-		LOAD_SCHEDULE_METHOD,
-		`preferencesData=${JSON.stringify(preferences)}`
-	);
+	// const LOAD_SCHEDULE_URL = "php/api.php/generatePersonalSchedule";
+	// const LOAD_SCHEDULE_METHOD = "POST";
+	//
+	// ajaxPersonalScheduleRequest(
+	// 	LOAD_SCHEDULE_URL,
+	// 	LOAD_SCHEDULE_METHOD,
+	// 	`preferencesData=${JSON.stringify(preferences)}`
+	// );
 }
 
 function generatePreferenceDetails(preferenceButton) {

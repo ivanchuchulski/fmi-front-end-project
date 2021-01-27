@@ -1,19 +1,25 @@
+'use strict';
 (function () {
 	window.onload = () => loadPersonalEvents();
 
-	navigationButtonHandlers();
+	addNavbarHandlers();
 
-	let applyFilterButton = document
-		.getElementById("apply-filter")
-		.addEventListener("click", generateScheduleByFilters);
+	let updateChangesButton =
+		document.getElementById("apply-changes")
+			.addEventListener("click", updatePersonalSchedule);
 
-	let resetFilterButton = document
-		.getElementById("reset-filter")
-		.addEventListener("click", removeFilters);
+	let applyFilterButton =
+		document.getElementById("apply-filter")
+				.addEventListener("click", applyFiltersToEvents);
+
+	let resetFilterButton =
+		document.getElementById("reset-filter")
+				.addEventListener("click", removeFilters);
 })();
 
 function loadPersonalEvents() {
-	const PERSONAL_SCHEDULE_URL = "https://my-json-server.typicode.com/ivanchuchulski/events-db/preferences";
+	// const PERSONAL_SCHEDULE_URL = "https://my-json-server.typicode.com/ivanchuchulski/events-db/preferences";
+	const PERSONAL_SCHEDULE_URL = "data/personalEvents.json";
 	const PERSONAL_SCHEDULE_METHOD = "GET";
 
 	ajaxLoadPersonalScheduleRequest(PERSONAL_SCHEDULE_URL, PERSONAL_SCHEDULE_METHOD);
@@ -38,9 +44,7 @@ function ajaxLoadPersonalScheduleHandler(xhr) {
 	if (responseCode === okResponseCode) {
 		drawPersonalEvents(responseText);
 	} else {
-		displayMessage(
-			"грешка : не е започната сесия или сесията е изтелкла(или персоналните събития не може да бъдат заредени)"
-		);
+		displayMessage("грешка : персоналните събития не може да бъдат заредени");
 	}
 }
 
@@ -60,141 +64,171 @@ function drawPersonalEvents(responseText) {
 		return;
 	}
 
-	Object.keys(preferencesList).forEach((event) => {
-		let theme = preferencesList[event].theme;
-		let presentDate = preferencesList[event].presentDate;
-		let presenterName = preferencesList[event].presenterName;
-		let place = preferencesList[event].place;
-		let preferenceType = preferencesList[event].preferenceType;
+	for (let event of preferencesList) {
+		let {theme, presenterName, place, facultyNumber, groupNumber, dayNumber, presentDate, preferenceType} = event;
 
-		let facultyNumber = preferencesList[event].facultyNumber;
-		let groupNumber = preferencesList[event].groupNumber;
-		let dayNumber = preferencesList[event].dayNumber;
+		let date = new Date(presentDate);
+		let eventTime = date.toLocaleTimeString().split(":").splice(0, 2).join(":");
+		let yearMonthDay = date.toDateString().split(" ").splice(1, 3).join(" ");
 
-		let eventElement = document.createElement("div");
+		let eventDateFormatted = eventTime + ", " + yearMonthDay;
 
-		let details = document.createElement("div");
-		let timeinfo = document.createElement("div");
-		let preference = document.createElement("div");
+		let eventElement = document.createElement("section");
 
+		let details = document.createElement("section");
+		let themeParagraph = document.createElement("p")
+		let presenterParagraph = document.createElement("p")
+		let groupNumberParagraph = document.createElement("p")
+
+		let timeinfo = document.createElement("section");
+		let dateParagraph = document.createElement("p");
+		let dayParagraph = document.createElement("p");
+		let presentationSiteParagraph = document.createElement("p");
+		let placeLink = document.createElement("a");
+		let placeMessageSpan = document.createElement("span");
+		let placeAddressSpan = document.createElement("span");
+
+		let preference = document.createElement("section");
 		let willGoButton = document.createElement("button");
 		let couldGoButton = document.createElement("button");
 		let removeButton = document.createElement("button");
 
 		eventElement.className += "event";
+
+		// details section
 		details.className += "details";
+
+		themeParagraph.className += "theme";
+		themeParagraph.innerText += theme;
+
+		presenterParagraph.className += "presenter";
+		presenterParagraph.innerText += `${presenterName}, ${facultyNumber}`;
+
+		groupNumberParagraph.className += "groupNumber";
+		groupNumberParagraph.innerText += `Група ${groupNumber}`;
+
+		// timeinfo section
 		timeinfo.className += "timeinfo";
+
+		dateParagraph.className += "date";
+		dateParagraph.innerText += eventDateFormatted;
+
+		dayParagraph.className += "dayNumber";
+		dayParagraph.innerText += `Ден ${dayNumber}`;
+
+		presentationSiteParagraph.className += "presentationSite";
+
+		placeLink.href = place;
+		placeLink.target = "_blank";
+
+		placeMessageSpan.className = "placeMessage";
+		placeMessageSpan.innerText += "Място на провеждане";
+
+		placeAddressSpan.className = "placeAddress";
+		placeAddressSpan.innerText += place
+
+		// preferences section
 		preference.className += "preference";
 
 		willGoButton.className += "preferenceButton willAttend";
-		couldGoButton.className += "preferenceButton couldAttend";
-		removeButton.className += "preferenceButton cancelAttend";
-
-		details.innerHTML = `
-			<p class="theme">${theme}</p>
-			<p class="presenter">${presenterName}, ${facultyNumber}</p>
-			<p class="group-number"> Група ${groupNumber}</p>`;
-
-		timeinfo.innerHTML = `
-			<p class="date">${presentDate}</p>
-			<p class="day-number">Ден ${dayNumber}</p>
-			<p class="presentationSite">
-				<a href=${place} target="_blank">
-				<span class="place-message">Място на провеждане</span>
-				<span class="place-address">${place}</span>
-			</p>`;
-
 		willGoButton.innerText += "ще отида";
+
+		couldGoButton.className += "preferenceButton couldAttend";
 		couldGoButton.innerText += "може би ще отида";
+
+		removeButton.className += "preferenceButton cancelAttend";
 		removeButton.innerText += "премахни събитието";
 
-		eventParent.appendChild(eventElement);
+		// appending the elements in the DOM
+		// details section
+		details.appendChild(themeParagraph);
+		details.appendChild(presenterParagraph);
+		details.appendChild(groupNumberParagraph);
 
-		eventElement.appendChild(details);
-		eventElement.appendChild(timeinfo);
-		eventElement.appendChild(preference);
+		// timeinfo section
+		presentationSiteParagraph.appendChild(placeLink);
+		placeLink.appendChild(placeMessageSpan);
+		placeLink.appendChild(placeAddressSpan);
 
+		timeinfo.appendChild(dateParagraph);
+		timeinfo.appendChild(dayParagraph);
+		timeinfo.appendChild(presentationSiteParagraph);
+
+		// preference section
 		preference.appendChild(willGoButton);
 		preference.appendChild(couldGoButton);
 		preference.appendChild(removeButton);
 
+		// event section
+		eventElement.appendChild(details);
+		eventElement.appendChild(timeinfo);
+		eventElement.appendChild(preference);
+
+		eventParent.appendChild(eventElement);
+
+		// adding event listeners
 		willGoButton.addEventListener("click", addToPreferences);
 		couldGoButton.addEventListener("click", addToPreferences);
 		removeButton.addEventListener("click", addToPreferences);
 
 		// by default hide the place address link
-		timeinfo.getElementsByClassName("place-address")[0].style.display = "none";
+		timeinfo.getElementsByClassName('placeAddress')[0].style.display = "none";
 
 		timeinfo.addEventListener("mouseover", showAddressOnHover);
 		timeinfo.addEventListener("mouseleave", showMessageOnLeave);
 
+		// highlighting preference button
 		if (preferenceType === "willAttend") {
 			addHighlight(willGoButton);
-
-			// willGoButton.removeEventListener("click", addToPreferences);
-
-			// couldGoButton.style.display = "none";
 		}
 		else {
 			addHighlight(couldGoButton);
-
-			// couldGoButton.removeEventListener("click", addToPreferences);
-
-			// willGoButton.style.display = "none";
 		}
-	});
+	}
 }
 
 function showAddressOnHover() {
-	let placeMessageElement = this.getElementsByClassName('place-message')[0];
-	let placeAddressElement = this.getElementsByClassName("place-address")[0];
+	let placeMessageElement = this.getElementsByClassName('placeMessage')[0];
+	let placeAddressElement = this.getElementsByClassName("placeAddress")[0];
 
 	placeMessageElement.style.display = "none";
 	placeAddressElement.style.display = "inline";
 }
 
 function showMessageOnLeave() {
-	let placeMessageElement = this.getElementsByClassName('place-message')[0];
-	let placeAddressElement = this.getElementsByClassName("place-address")[0];
+	let placeMessageElement = this.getElementsByClassName('placeMessage')[0];
+	let placeAddressElement = this.getElementsByClassName("placeAddress")[0];
 
 	placeMessageElement.style.display = "inline";
 	placeAddressElement.style.display = "none";
 }
 
-function navigationButtonHandlers() {
-	let schedulePageButton = document
-		.getElementById("schedule-page-button")
-		.addEventListener("click", () => {
-			window.location = "schedule.html";
-		});
+function addNavbarHandlers() {
+	let schedulePageButton =
+		document.getElementById("schedule-page-button")
+				.addEventListener("click", () => window.location = "schedule.html");
 
 	let personalisedScheduleButton = document.getElementById("personalised-schedule-button");
-	personalisedScheduleButton.addEventListener("click", () => {
-		window.location = "personal-schedule.html";
-	});
-
-	let statisticsButton = document
-		.getElementById("view-statistics")
-		.addEventListener("click", () => {
-			window.location = "statistics.html";
-		});
-
-	let logoutButton = document
-		.getElementById("logout-button")
-		.addEventListener("click", logoutRequest);
-
+	personalisedScheduleButton.addEventListener("click", () => window.location = "personal-schedule.html");
 	addHighlight(personalisedScheduleButton);
+
+	let statisticsButton =
+		document.getElementById("view-statistics")
+				.addEventListener("click", () => window.location = "statistics.html");
+
+	let logoutButton =
+		document.getElementById("logout-button")
+				.addEventListener("click", logoutRequest);
 }
 
-function generateScheduleByFilters() {
+function applyFiltersToEvents() {
 	let daySelectElement = document.getElementById("filter-by-day");
 	let groupSelectElement = document.getElementById("filter-by-group");
 	let preferenceSelectElement = document.getElementById("filter-by-preference");
 
 	let filterByDay = daySelectElement.options[daySelectElement.selectedIndex].value;
 	let filterByGroup = groupSelectElement.options[groupSelectElement.selectedIndex].value;
-	let filterByPreference =
-		preferenceSelectElement.options[preferenceSelectElement.selectedIndex].value;
+	let filterByPreference = preferenceSelectElement.options[preferenceSelectElement.selectedIndex].value;
 
 	let events = document.getElementsByClassName("event");
 
@@ -213,17 +247,26 @@ function generateScheduleByFilters() {
 	}
 }
 
-function filterEventsByDay(events, dayFilter) {
-	for (let index = 0; index < events.length; index++) {
-		const event = events[index];
-		let eventDay = event.getElementsByClassName("day-number")[0].innerText.split(" ")[1];
+function displayAllEvents() {
+	let events = document.getElementsByClassName("event");
 
-		//console.log(eventDay);
+	for (let event of events) {
+		showEvent(event);
+	}
+}
+
+function filterEventsByDay(events, dayFilter) {
+	for (let event of events) {
+		let eventDay = event.getElementsByClassName("dayNumber")[0].innerText.split(" ")[1];
 
 		if (eventDay !== dayFilter) {
 			hideEvent(event);
 		}
 	}
+}
+
+function showEvent(event) {
+	event.style.display = "flex";
 }
 
 function hideEvent(event) {
@@ -233,18 +276,6 @@ function hideEvent(event) {
 function removeFilters() {
 	displayAllEvents();
 	removeSelectedFilters();
-}
-
-function displayAllEvents() {
-	let daySelectElement = document.getElementById("filter-by-day");
-	let groupSelectElement = document.getElementById("filter-by-group");
-
-	let events = document.getElementsByClassName("event");
-
-	for (let index = 0; index < events.length; index++) {
-		let element = events[index];
-		element.style.display = "flex";
-	}
 }
 
 function removeSelectedFilters() {
@@ -258,10 +289,8 @@ function removeSelectedFilters() {
 }
 
 function filterEventsByGroup(events, groupFilter) {
-	for (let index = 0; index < events.length; index++) {
-		const event = events[index];
-
-		let eventGroup = event.getElementsByClassName("group-number")[0].innerText.split(" ")[1];
+	for (let event of events) {
+		let eventGroup = event.getElementsByClassName("groupNumber")[0].innerText.split(" ")[1];
 
 		if (eventGroup !== groupFilter) {
 			hideEvent(event);
@@ -270,8 +299,7 @@ function filterEventsByGroup(events, groupFilter) {
 }
 
 function filterEventsByPreference(events, preferenceFilter) {
-	for (let index = 0; index < events.length; index++) {
-		const event = events[index];
+	for (let event of events) {
 		let activePreferenceButton = event.getElementsByClassName("active")[0];
 		let buttonPreference = activePreferenceButton.className.split(" ")[1];
 
@@ -337,39 +365,8 @@ function updatePersonalSchedule() {
 		return;
 	}
 
-	// console.log("preferences");
-	// console.log(preferences);
-
-	const UPDATE_SCHEDULE_URL = "php/api.php/updatePersonalSchedule";
-	const UPDATE_SCHEDULE_METHOD = "POST";
-
-	ajaxUpdatePersonalScheduleRequest(
-		UPDATE_SCHEDULE_URL,
-		UPDATE_SCHEDULE_METHOD,
-		`preferencesData=${JSON.stringify(preferences)}`
-	);
-}
-
-function ajaxUpdatePersonalScheduleRequest(url, method, data) {
-	let xhr = new XMLHttpRequest();
-
-	xhr.addEventListener("load", () => ajaxUpdatePersonalScheduleHandler(xhr));
-
-	xhr.open(method, url, true);
-	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhr.send(data);
-}
-
-function ajaxUpdatePersonalScheduleHandler(xhr) {
-	let response = JSON.parse(xhr.responseText);
-
-	if (response.success) {
-		console.log("success update personalised schedule");
-		goToPersonalSchedulePage("personal-schedule.html");
-	} else {
-		console.log("error : generate personalised schedule");
-		displayMessage("грешка : невъзможност за обновяваве на персонален график");
-	}
+	console.log("preferences");
+	console.log(preferences);
 }
 
 function generatePreferenceDetails(preferenceButton) {
@@ -387,39 +384,7 @@ function generatePreferenceDetails(preferenceButton) {
 }
 
 function logoutRequest() {
-	const LOGOUT_URL = "php/api.php/logout";
-	const LOGOUT_METHOD = "POST";
-
-	ajaxLogoutRequest(LOGOUT_URL, LOGOUT_METHOD);
-}
-
-function ajaxLogoutRequest(url, method, data) {
-	let xhr = new XMLHttpRequest();
-
-	xhr.addEventListener("load", () => ajaxLogoutHandler(xhr));
-
-	xhr.open(method, url, true);
-	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhr.send(data);
-}
-
-function ajaxLogoutHandler(xhr) {
-	let response = JSON.parse(xhr.responseText);
-
-	if (response.success) {
-		console.log("success : logout request");
-		goToLoginPage("index.html");
-	} else {
-		console.log("error : logout request");
-	}
-}
-
-function goToSchedulePage(schedulePageUrl) {
-	window.location = schedulePageUrl;
-}
-
-function goToPersonalSchedulePage(schedulePageUrl) {
-	window.location = schedulePageUrl;
+	goToLoginPage("index.html")
 }
 
 function goToLoginPage(loginPageUrl) {

@@ -255,7 +255,7 @@ footer {
     }
 
     .event {
-        width: 36rem;
+        width: 38rem;
         font-size: 0.6rem;
     }
 
@@ -269,12 +269,12 @@ footer {
     }
 
     .preference {
-        width: 5rem;
+        width: 7rem;
     }
 
     .preferenceButton {
-        width: 4rem;
-        height: 3.5rem;
+        width: 5rem;
+        height: 3rem;
     }
 }
 
