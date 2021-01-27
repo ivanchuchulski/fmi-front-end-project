@@ -229,17 +229,19 @@ footer {
     }
 
     nav {
-        width: 20rem;
+        width: 28rem;
     }
 
     nav button {
         font-size: 0.7rem;
-        height: 2.5rem;
+        height: 3.5rem;
     }
 
     #filters {
         width: auto;
         height: 12rem;
+
+        margin: 0.6rem 0;
     }
 
     #filter-buttons {
@@ -285,6 +287,15 @@ footer {
 }
 
 @media only screen and (max-width: 640px) {
+    nav {
+        width: 24rem;
+    }
+
+    nav button {
+        font-size: 0.7rem;
+        height: 2.5rem;
+    }
+
     .event {
         flex-direction: column;
         align-items: center;
@@ -331,5 +342,4 @@ footer {
         width: 8rem;
         height: 3rem;
     }
-
 }

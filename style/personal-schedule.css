@@ -220,3 +220,128 @@ main p {
 footer {
 	grid-area: footer;
 }
+
+@media only screen and (max-width: 890px) {
+	body {
+		grid-template-rows: auto auto auto auto;
+		margin: 1rem;
+	}
+
+	nav {
+		width: 28rem;
+	}
+
+	nav button {
+		font-size: 0.7rem;
+		height: 3.5rem;
+	}
+
+	#filters {
+		width: auto;
+		height: 12rem;
+
+		font-size: 0.8rem;
+	}
+
+	#filter-buttons {
+		margin: 0.8rem auto;
+	}
+
+	#filter-buttons button {
+		height: 2.3rem;
+
+	}
+
+	main {
+		flex-direction: column;
+		flex-wrap: nowrap;
+		align-items: center;
+		justify-content: center;
+		width: 38rem;
+	}
+
+	.event {
+		width: 38rem;
+		font-size: 0.6rem;
+	}
+
+	.details {
+		width: 15rem;
+	}
+
+	.timeinfo {
+		width: 15rem;
+
+	}
+
+	.preference {
+		width: 7rem;
+	}
+
+	.preferenceButton {
+		width: 5rem;
+		height: 3rem;
+	}
+}
+
+@media only screen and (max-width: 640px) {
+	body {
+		margin: 0.7rem;
+	}
+
+	nav {
+		width: 24rem;
+	}
+
+	nav button {
+		font-size: 0.7rem;
+		height: 2.5rem;
+	}
+
+	.event {
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+
+		width: 24rem;
+		height: 22rem;
+	}
+
+	.details {
+		width: 24rem;
+		height: 10rem;
+
+		margin: 0;
+
+		border: none;
+
+		text-align: center;
+	}
+
+	.timeinfo {
+		width: 24rem;
+		height: 10rem;
+
+		margin: 0;
+
+		border: none;
+
+		text-align: center;
+	}
+
+	.preference {
+		flex-direction: row;
+
+		width: 24rem;
+		height: 10rem;
+
+		margin: 0;
+
+		border: none;
+	}
+
+	.preferenceButton {
+		width: 8rem;
+		height: 3rem;
+	}
+}
