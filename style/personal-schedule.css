@@ -1,50 +1,77 @@
+* {
+	/*font-family: Helvetica, sans-serif;*/
+}
+
+html {
+	height: 100%;
+	width: 100%;
+}
+
 body {
 	display: grid;
 	grid-template-columns: 100%;
-	grid-template-rows: 150px auto auto auto 80px;
+	grid-template-rows: 10rem auto auto auto 5rem;
 	grid-template-areas: "header" "information" "filters" "main" "footer";
 
 	justify-items: center;
 	align-items: center;
 
-	margin: 15px 50px;
+	margin: 1rem 3rem;
 
-	font-size: 12px;
+	font-size: 16px;
 	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-header {
+nav {
 	grid-area: header;
-	width: 750px;
-}
+	width: 50rem;
 
-header nav {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 }
 
-header button {
-	width: 180px;
-	height: 60px;
-    padding: 5px 5px;
-    color: #2c6460;
-    font-weight: bold;
+nav button {
+	width: 15rem;
+	height: 4rem;
+
+	padding: 0.3rem;
+
+	color: #2c6460;
+	font-weight: bold;
 }
 
 #information {
 	grid-area: information;
-	text-align: center;
-	margin: 10px 10px;
+
+	margin: 0.625rem;
+
 	color: #2c6460;
+
+	text-align: center;
+}
+
+#apply-changes {
+	width: 14rem;
+	height: 2.8rem;
+
+	color: #2c6460;
+	font-weight: bold;
+}
+
+#messageLabel {
+	display: block;
 }
 
 #filters {
 	grid-area: filters;
+
+	width: 50rem;
+
+	margin: 1rem 0;
+
 	text-align: center;
-    margin: 10px 10px;
-    color: #2c6460;
 }
 
 #filter-options {
@@ -52,48 +79,36 @@ header button {
 	flex-direction: row;
 	justify-content: space-evenly;
 
-	width: 770px;
+	margin: 0.625rem;
 
-	font-size: 13px;
 	font-weight: bold;
-	margin: 5px;
+	color: #2c6460;
 }
 
 #filters select {
 	box-sizing: border-box;
+
 	display: block;
+
 	width: 95%;
-	margin: 8px;
+
+	margin: 0.5rem;
 }
+
 #filter-buttons {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
 
-	width: 55%;
-
-	margin: 5px auto;
+	margin: 0.3rem auto;
 }
 
 #filter-buttons button {
 	display: block;
-	height: 27px;
-	margin: 0 10px;
-}
 
-#apply-changes {
-	width: 160px;
-	height: 45px;
+	height: 1.7rem;
 
-	padding: 10px 10px;
-
-	color: #2c6460;
-    font-weight: bold;
-}
-
-#messageLabel {
-	display: block;
-	font-size: 16pt;
+	margin: 0 1rem;
 }
 
 main {
@@ -105,8 +120,6 @@ main {
 	flex-wrap: wrap;
 
 	width: 95rem;
-
-	/*width: 770px;*/
 }
 
 .active {

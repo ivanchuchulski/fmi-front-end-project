@@ -16,8 +16,6 @@ body {
     justify-items: center;
     align-items: center;
 
-    height: 100%;
-
     margin: 1rem 3rem;
 
     font-size: 16px;
@@ -50,6 +48,7 @@ nav button {
     margin: 0.625rem;
 
     color: #2c6460;
+
     text-align: center;
 }
 
@@ -66,8 +65,13 @@ nav button {
 }
 
 #filters {
+    grid-area: filters;
+
     width: 50rem;
+
     margin: 1rem 0;
+
+    text-align: center;
 }
 
 #filter-options {
@@ -77,16 +81,17 @@ nav button {
 
     margin: 0.625rem;
 
-    /*font-size: 1rem;*/
-
     font-weight: bold;
     color: #2c6460;
 }
 
 #filters select {
     box-sizing: border-box;
+
     display: block;
+
     width: 95%;
+
     margin: 0.5rem;
 }
 
@@ -100,7 +105,9 @@ nav button {
 
 #filter-buttons button {
     display: block;
-    height: 1.5rem;
+
+    height: 1.7rem;
+
     margin: 0 1rem;
 }
 
@@ -219,7 +226,6 @@ footer {
     body {
         grid-template-rows: auto auto auto auto;
         margin: 1rem;
-        /*height: 100%;*/
     }
 
     nav {
