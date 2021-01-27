@@ -1,246 +1,274 @@
 * {
-	/*font-family: Helvetica, sans-serif;*/
+    /*font-family: Helvetica, sans-serif;*/
 }
 
 html {
-	height: 100%;
-	width: 100%;
+    height: 100%;
+    width: 100%;
 }
 
 body {
-	display: grid;
-	grid-template-columns: 100%;
-	grid-template-rows: 10rem auto auto auto 5rem;
-	grid-template-areas: "header" "information" "filters" "main" "footer";
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 10rem auto auto auto 5rem;
+    grid-template-areas: "header" "information" "filters" "main" "footer";
 
-	justify-items: center;
-	align-items: center;
+    justify-items: center;
+    align-items: center;
 
-	margin: 1rem 3rem;
+    height: 100%;
 
-	font-size: 16px;
-	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    margin: 1rem 3rem;
+
+    font-size: 16px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 nav {
-	grid-area: header;
-	width: 50rem;
+    grid-area: header;
+    width: 50rem;
 
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 nav button {
-	width: 15rem;
-	height: 4rem;
+    width: 15rem;
+    height: 4rem;
 
-	padding: 5px 5px;
+    padding: 0.3rem;
 
-	color: #2c6460;
-	font-weight: bold;
+    color: #2c6460;
+    font-weight: bold;
 }
 
 #information {
-	grid-area: information;
+    grid-area: information;
 
-	margin: 10px 10px;
+    margin: 0.625rem;
 
-	color: #2c6460;
-	text-align: center;
-}
-
-#filter-options {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-evenly;
-
-	width: 770px;
-
-	margin: 5px;
-
-	font-size: 13px;
-	font-weight: bold;
-	color: #2c6460;
-}
-
-#filters select {
-	box-sizing: border-box;
-	display: block;
-	width: 95%;
-	margin: 8px;
-}
-
-#filter-buttons {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	width: 55%;
-	margin: 5px auto;
-}
-
-#filter-buttons button {
-	display: block;
-	height: 27px;
-	margin: 0 10px;
+    color: #2c6460;
+    text-align: center;
 }
 
 #make-personal {
-	width: 280px;
-	height: 40px;
-	padding: 10px 10px;
-	color: #2c6460;
-	font-weight: bold;
+    width: 18rem;
+    height: 2.8rem;
+
+    color: #2c6460;
+    font-weight: bold;
 }
 
 #messageLabel {
-	display: block;
-	font-size: 16pt;
+    display: block;
+}
+
+#filters {
+    width: 50rem;
+    margin: 1rem 0;
+}
+
+#filter-options {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+
+    margin: 0.625rem;
+
+    /*font-size: 1rem;*/
+
+    font-weight: bold;
+    color: #2c6460;
+}
+
+#filters select {
+    box-sizing: border-box;
+    display: block;
+    width: 95%;
+    margin: 0.5rem;
+}
+
+#filter-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    margin: 0.3rem auto;
+}
+
+#filter-buttons button {
+    display: block;
+    height: 1.5rem;
+    margin: 0 1rem;
 }
 
 main {
-	grid-area: main;
+    grid-area: main;
 
-	/* for grid layout*/
-	display: flex;
-	flex-direction: row;
-	justify-content: space-evenly;
-	flex-wrap: wrap;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
 
-	width: 95rem;
-
-	/* for mobile view*/
-	/*width: 55rem;*/
+    width: 95rem;
 }
 
 .active {
-	background-color: #666;
-	color: white;
-}
-
-.hide {
-	display: none;
+    background-color: #666;
+    color: white;
 }
 
 .event {
-	display: flex;
-	flex-direction: row;
-	align-items: stretch;
-	justify-content: space-between;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-between;
 
-	height: 10rem;
-	width: 45rem;
+    height: 10rem;
+    width: 45rem;
 
-	margin: 0.7rem 0.7rem;
+    margin: 0.8rem 0.8rem;
 
-	background-color: #ececec;
-	border: 2px solid black;
+    background-color: #ececec;
+    border: 2px solid black;
 }
 
 .details {
-	display: flex;
-	flex-direction: column;
-	align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
 
-	width: 18rem;
+    width: 18rem;
 
-	margin: 0.3rem;
+    margin: 0.3rem;
 
-	border: 2px solid black;
-	background-color: #2c6460;
+    border: 2px solid black;
+    background-color: #2c6460;
 }
 
 .timeinfo {
-	display: flex;
-	flex-direction: column;
-	align-content: stretch;
+    display: flex;
+    flex-direction: column;
+    align-content: stretch;
 
-	width: 18rem;
+    width: 18rem;
 
-	margin: 0.3rem;
+    margin: 0.3rem;
 
-	border: 2px solid black;
-	background-color: #2c6460;
+    border: 2px solid black;
+    background-color: #2c6460;
 }
 
 .preference {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-around;
-	align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
 
-	width: 7rem;
+    width: 7rem;
 
-	margin: 0.3rem;
+    margin: 0.3rem;
 
-	border: 2px solid black;
-	background-color: #2c6460;
+    border: 2px solid black;
+    background-color: #2c6460;
 }
 
 
 main p {
-	padding-left: 1rem;
-	padding-right: 0.3rem;
+    padding-left: 1rem;
+    padding-right: 0.3rem;
 
-	font-size: 0.9rem;
-	color: white;
+    font-size: 0.9rem;
+    color: white;
 }
 
 .theme {
-	font-size: 0.875rem;
-	font-weight: bold;
+    font-size: 0.875rem;
+    font-weight: bold;
 }
 
 .presenter,
 .date {
-	font-size: 0.8rem;
-	font-weight: bold;
+    font-size: 0.8rem;
+    font-weight: bold;
 }
 
 .presentationSite a {
-	color: white;
+    color: white;
 }
 
 .placeAddress {
-	font-size: 0.65rem;
+    font-size: 0.65rem;
 }
 
 .preferenceButton {
-	width: 6rem;
-	height: 3rem;
+    width: 6rem;
+    height: 3rem;
 
-	margin: 5px 0.25rem;
-	padding: 5px 0.25rem;
+    margin: 5px 0.25rem;
+    padding: 5px 0.25rem;
 }
 
 footer {
-	grid-area: footer;
+    grid-area: footer;
 }
 
 @media only screen and (max-width: 890px) {
-	main {
-		/* for mobile view*/
-		flex-direction: column;
-		flex-wrap: nowrap;
-		justify-content: center;
-		width: 54rem;
-	}
+    body {
+        grid-template-rows: auto auto auto auto;
+        margin: 1rem;
+        /*height: 100%;*/
+    }
 
-	.event {
-		width: 40rem;
-	}
+    nav {
+        width: 20rem;
+    }
 
-	.details {
+    nav button {
+        font-size: 0.7rem;
+        height: 2.5rem;
+    }
 
-	}
+    #filters {
+        width: auto;
+        height: 12rem;
+    }
 
-	.timeinfo {
+    #filter-buttons {
 
-	}
+        margin: 0.8rem auto;
+    }
 
-	.preference {
+    #filter-buttons button {
+        height: 2.3rem;
 
-	}
+    }
+
+    main {
+        /* for mobile view*/
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-items: center;
+        width: 40rem;
+    }
+
+    .event {
+        width: 40rem;
+    }
+
+    .details {
+        width: 15rem;
+    }
+
+    .timeinfo {
+        width: 15rem;
+
+    }
+
+    .preference {
+        width: 10rem;
+    }
 
 }
