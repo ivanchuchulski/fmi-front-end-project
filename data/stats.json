@@ -1,0 +1,32 @@
+{
+        "numberOfUsers":"3",
+    "stats":{
+        "numberOfPresentations":"15",
+        "numberOfPreferences":"6",
+        "maxNumberOfPreferencesForUser":"5",
+        "averageNumberOfPreference":"3",
+        "mostPreferredPresentation":"2"
+    },
+    "topFivePresentations":[
+        {
+            "count":"2",
+            "theme":"WebSocket"
+        },
+        {
+            "count":"2",
+            "theme":"HTTPS и HTTP - сигурност в PHP"
+        },
+        {
+            "count":"6",
+            "theme":"Laravel Web Framework"
+        },
+        {
+            "count":"5",
+            "theme":"React JS"
+        },
+        {
+            "count":"4",
+            "theme":"Компресиране на изображения в уеб"
+        }
+    ]
+}
