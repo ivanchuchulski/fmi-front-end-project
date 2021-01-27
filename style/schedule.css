@@ -207,8 +207,8 @@ main p {
     width: 6rem;
     height: 3rem;
 
-    margin: 5px 0.25rem;
-    padding: 5px 0.25rem;
+    margin: 0.25rem;
+    padding: 0.25rem;
 }
 
 footer {
@@ -247,15 +247,16 @@ footer {
     }
 
     main {
-        /* for mobile view*/
         flex-direction: column;
         flex-wrap: nowrap;
         align-items: center;
-        width: 40rem;
+        justify-content: center;
+        width: 38rem;
     }
 
     .event {
-        width: 40rem;
+        width: 36rem;
+        font-size: 0.6rem;
     }
 
     .details {
@@ -268,7 +269,61 @@ footer {
     }
 
     .preference {
-        width: 10rem;
+        width: 5rem;
+    }
+
+    .preferenceButton {
+        width: 4rem;
+        height: 3.5rem;
+    }
+}
+
+@media only screen and (max-width: 640px) {
+    .event {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        width: 24rem;
+        height: 22rem;
+    }
+
+    .details {
+        width: 24rem;
+        height: 10rem;
+
+        margin: 0;
+
+        border: none;
+
+        text-align: center;
+    }
+
+    .timeinfo {
+        width: 24rem;
+        height: 10rem;
+
+        margin: 0;
+
+        border: none;
+
+        text-align: center;
+    }
+
+    .preference {
+        flex-direction: row;
+
+        width: 24rem;
+        height: 10rem;
+
+        margin: 0;
+
+        border: none;
+    }
+
+    .preferenceButton {
+        width: 8rem;
+        height: 3rem;
     }
 
 }
