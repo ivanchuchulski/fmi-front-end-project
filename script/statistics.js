@@ -52,7 +52,7 @@ function ajaxLoadHandler(xhr) {
         drawStatistics(responseText);
     } else {
         console.log("error : load statistics");
-        displayMessage("статистикака не може да бъде заредена");
+        displayMessage("грешка : статистиката не може да бъде заредена");
     }
 }
 
@@ -115,7 +115,7 @@ function addHighlight(preferenceButton) {
 }
 
 function displayMessage(text) {
-    let messageLabel = document.getElementById("messageLabel");
+    let messageLabel = document.getElementById("message-label");
 
     messageLabel.innerText = text;
 }

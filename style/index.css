@@ -24,14 +24,23 @@ body {
 
 header {
     grid-area: header;
+
     width: 45rem;
+
     text-align: center;
 }
 
-article {
+main {
     grid-area: main;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
     width: 44rem;
     height: 24rem;
+
     margin: 1rem auto;
     padding: 2rem 1rem;
 
@@ -51,16 +60,16 @@ h4 {
 }
 
 #registration {
-    float: left;
     width: 19.5rem;
     height: 22.5rem;
+
     margin-left: 1rem;
 }
 
 #login {
-    float: right;
     width: 19.5rem;
     height: 22.5rem;
+
     margin-right: 1rem;
 
     background-color: #2c6460;
@@ -134,6 +143,42 @@ input {
     color: #2c6460;
 }
 
-body footer {
+footer {
     grid-area: footer;
+    text-align: center;
+}
+
+@media only screen and (max-width: 890px) {
+    body {
+        grid-template-rows: auto auto auto;
+        margin: 0.8rem;
+    }
+
+    header {
+        width: 25rem;
+
+        margin: 1rem 0;
+    }
+
+    main {
+        flex-direction: column;
+
+        width: 24rem;
+        height: 50rem;
+
+        padding: 0;
+    }
+
+    #registration {
+        width: 20rem;
+
+        margin-left: 0;
+    }
+
+    #login {
+        width: 20rem;
+
+        margin-right: 0;
+    }
+
 }

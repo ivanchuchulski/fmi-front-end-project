@@ -11,10 +11,10 @@ body {
 	display: grid;
 	grid-template-columns: 100%;
 	grid-template-rows: 10rem auto auto auto 5rem;
-	grid-template-areas: "header" "information" "filters" "main" "footer";
+	grid-template-areas: "nav" "information" "filters" "main" "footer";
 
-	justify-items: center;
 	align-items: center;
+	justify-items: center;
 
 	margin: 1rem 3rem;
 
@@ -23,13 +23,18 @@ body {
 }
 
 nav {
-	grid-area: header;
+	grid-area: nav;
 	width: 50rem;
 
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
+}
+
+.active {
+	background-color: #666;
+	color: white;
 }
 
 nav button {
@@ -122,10 +127,7 @@ main {
 	width: 95rem;
 }
 
-.active {
-	background-color: #666;
-	color: white;
-}
+
 
 .event {
 	display: flex;
@@ -221,9 +223,9 @@ footer {
 	grid-area: footer;
 }
 
-@media only screen and (max-width: 890px) {
+@media only screen and (max-width: 1280px) {
 	body {
-		grid-template-rows: auto auto auto auto;
+		grid-template-rows: auto auto auto auto auto;
 		margin: 1rem;
 	}
 
@@ -290,7 +292,7 @@ footer {
 	}
 
 	nav {
-		width: 24rem;
+		width: 23rem;
 	}
 
 	nav button {
