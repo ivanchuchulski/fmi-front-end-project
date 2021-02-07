@@ -21,7 +21,10 @@ function register(clickEvent) {
 		checkIfPasswordsMatch(formData["password"], passwordRepeatedRegister);
 
 		const REGISTER_METHOD = "POST";
-        const REGISTER_REQUEST_URL = "https://jsonplaceholder.typicode.com/users";
+		// const CREATED_RESPONSE_STATUS_CODE = 201;
+        // const REGISTER_REQUEST_URL = "https://jsonplaceholder.typicode.com/users"; // returns 201 response code
+
+        const REGISTER_REQUEST_URL = "data/register.json";
 
 		sendRegistrationRequest(REGISTER_REQUEST_URL, REGISTER_METHOD, `formData=${JSON.stringify(formData)}`);
 	} catch (exception) {
@@ -39,10 +42,10 @@ function login(clickEvent) {
 		formData["password"] = validateLoginPassword("login-password");
 
 		const LOGIN_METHOD = "POST";
-		// can't make a POST request to this for now
-		// const LOGIN_REQUEST_URL = "https://my-json-server.typicode.com/ivanchuchulski/events-db/users";
 
-		const LOGIN_REQUEST_URL = "https://jsonplaceholder.typicode.com/users";
+		// const CREATED_RESPONSE_STATUS_CODE = 201;
+		// const LOGIN_REQUEST_URL = "https://jsonplaceholder.typicode.com/users"; // returns 201 response code
+		const LOGIN_REQUEST_URL = "data/login.json";
 
 		sendLoginRequest(LOGIN_REQUEST_URL, LOGIN_METHOD, `formData=${JSON.stringify(formData)}`);
 	} catch (exception) {
@@ -194,19 +197,18 @@ function sendRegistrationRequest(url, method, data) {
 }
 
 function registrationRequestHandler(xhr) {
-	const CREATED_RESPONSE_STATUS_CODE = 201;
+
+	const OK_RESPONSE_CODE = 200;
 
 	let responseStatusCode = xhr.status;
-	// let responseText = JSON.parse(xhr.responseText);
+	let parsedResponseText = JSON.parse(xhr.responseText);
 
-	if (responseStatusCode === CREATED_RESPONSE_STATUS_CODE) {
-		console.log("success register");
+	if (responseStatusCode === OK_RESPONSE_CODE && parsedResponseText.success) {
 		displayRegistrationSuccessMessage("успешна регистрация!");
 
 		let registrationForm = document.getElementById("registration-form");
 		registrationForm.reset();
 	} else {
-		console.log("error : register");
 		displayRegistrationErrorMessage('неуспешна регистация!');
 	}
 }
@@ -222,17 +224,15 @@ function sendLoginRequest(url, method, data) {
 }
 
 function loginRequestHandler(xhr) {
-	// maybe for login the status should be 200, but can't really mock the response code
-	const CREATED_RESPONSE_STATUS_CODE = 201;
+	const OK_RESPONSE_CODE = 200;
 
 	let responseStatusCode = xhr.status;
-	// let responseText = JSON.parse(xhr.responseText);
+	let parsedResponseText = JSON.parse(xhr.responseText);
 
-	if (responseStatusCode === CREATED_RESPONSE_STATUS_CODE) {
-		console.log("success login");
+	if (responseStatusCode === OK_RESPONSE_CODE && parsedResponseText.success) {
 		displaySchedulePage("schedule.html");
 	} else {
-		displayLoginError('неуспешна регистация');
+		displayLoginError('неуспешено влизане в системата');
 	}
 }
 

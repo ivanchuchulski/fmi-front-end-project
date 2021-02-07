@@ -42,10 +42,8 @@ function loadEventsHandler(xhr) {
 	let responseText = xhr.responseText;
 
 	if (responseCode === okResponseCode) {
-		console.log("success load schedule");
 		drawEvents(responseText);
 	} else {
-		console.log("error : load schedule");
 		displayMessage("грешка : събитията не може да бъдат заредени");
 	}
 }
@@ -56,8 +54,8 @@ function drawEvents(responseText) {
 
 	let eventList = JSON.parse(responseText);
 
-	console.log("eventList : ")
-	console.log(eventList);
+	// console.log("eventList : ")
+	// console.log(eventList);
 
 	let eventParent = document.getElementById("event-list");
 
@@ -191,7 +189,7 @@ function addNavbarHandlers() {
 	schedulePageButton.addEventListener("click", () => window.location = "schedule.html");
 	addHighlight(schedulePageButton);
 
-	let personalSchedule =
+	let personalScheduleButton =
         document.getElementById("personalised-schedule-button")
                 .addEventListener("click", () => window.location = "personal-schedule.html");
 
@@ -201,7 +199,7 @@ function addNavbarHandlers() {
 
 	let logoutButton =
         document.getElementById("logout-button")
-                .addEventListener("click", logoutRequest);
+                .addEventListener("click", () => window.location = "index.html");
 }
 
 function applyFiltersToEvents() {
@@ -315,24 +313,15 @@ function generatePersonalisedSchedule() {
 	}
 
 	if (preferences.length === 0) {
-		// displayMessage("не сте избрали никакви събития!");
-		goToPersonalSchedulePage("personal-schedule.html");
+		displayMessage("грешка : не сте избрали никакви събития!");
+		// window.location = "personal-schedule.html";
 		return;
 	}
 
-	console.log("preferences");
-	console.log(preferences);
+	// console.log("preferences");
+	// console.log(preferences);
 
-	goToPersonalSchedulePage("personal-schedule.html");
-
-	// const LOAD_SCHEDULE_URL = "php/api.php/generatePersonalSchedule";
-	// const LOAD_SCHEDULE_METHOD = "POST";
-	//
-	// ajaxPersonalScheduleRequest(
-	// 	LOAD_SCHEDULE_URL,
-	// 	LOAD_SCHEDULE_METHOD,
-	// 	`preferencesData=${JSON.stringify(preferences)}`
-	// );
+	window.location = "personal-schedule.html";
 }
 
 function generatePreferenceDetails(preferenceButton) {
@@ -347,42 +336,8 @@ function generatePreferenceDetails(preferenceButton) {
 	};
 }
 
-function ajaxPersonalScheduleRequest(url, method, data) {
-	let xhr = new XMLHttpRequest();
-
-	xhr.addEventListener("load", () => ajaxPersonalScheduleHandler(xhr));
-
-	xhr.open(method, url, true);
-	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhr.send(data);
-}
-
-function ajaxPersonalScheduleHandler(xhr) {
-	let responseText = JSON.parse(xhr.responseText);
-
-	if (responseText.success) {
-		console.log("success generate personalised schedule");
-		goToPersonalSchedulePage("personal-schedule.html");
-	} else {
-		displayMessage("грешка : невъзможност за генеране на персонален график");
-		console.log("error : generate personalised schedule");
-	}
-}
-
-function goToPersonalSchedulePage(pageUrl) {
-	window.location = pageUrl;
-}
-
-function logoutRequest() {
-	goToLoginPage("index.html");
-}
-
-function goToLoginPage(loginPageUrl) {
-	window.location = loginPageUrl;
-}
-
 function displayMessage(text) {
-	let messageLabel = document.getElementById("messageLabel");
+	let messageLabel = document.getElementById("message-label");
 
 	messageLabel.innerText = text;
 }

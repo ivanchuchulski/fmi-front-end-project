@@ -56,8 +56,8 @@ function drawPersonalEvents(responseText) {
 
 	let preferencesList = JSON.parse(responseText);
 
-	console.log("eventList : ")
-	console.log(preferencesList);
+	// console.log("preferencesList : ")
+	// console.log(preferencesList);
 
 	if (preferencesList.length === 0) {
 		displayMessage("Нямате избрани презентации!");
@@ -218,7 +218,7 @@ function addNavbarHandlers() {
 
 	let logoutButton =
 		document.getElementById("logout-button")
-				.addEventListener("click", logoutRequest);
+				.addEventListener("click", () => window.location = "index.html");
 }
 
 function applyFiltersToEvents() {
@@ -365,8 +365,11 @@ function updatePersonalSchedule() {
 		return;
 	}
 
-	console.log("preferences");
-	console.log(preferences);
+	// console.log("preferences");
+	// console.log(preferences);
+
+	// refresh the page
+	location.reload();
 }
 
 function generatePreferenceDetails(preferenceButton) {
@@ -383,16 +386,8 @@ function generatePreferenceDetails(preferenceButton) {
 	return preferenceObj;
 }
 
-function logoutRequest() {
-	goToLoginPage("index.html")
-}
-
-function goToLoginPage(loginPageUrl) {
-	window.location = loginPageUrl;
-}
-
 function displayMessage(text) {
-	let messageLabel = document.getElementById("messageLabel");
+	let messageLabel = document.getElementById("message-label");
 
 	messageLabel.innerText = text;
 }

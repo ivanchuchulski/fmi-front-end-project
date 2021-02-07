@@ -48,10 +48,8 @@ function ajaxLoadHandler(xhr) {
     let responseText = xhr.responseText;
 
     if (responseCode === okResponseCode) {
-        console.log("success load statistics");
         drawStatistics(responseText);
     } else {
-        console.log("error : load statistics");
         displayMessage("грешка : статистиката не може да бъде заредена");
     }
 }
