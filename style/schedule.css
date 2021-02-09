@@ -27,6 +27,10 @@ body {
     color: white;
 }
 
+.active a {
+    color: white;
+}
+
 nav {
     grid-area: nav;
     width: 50rem;
@@ -43,6 +47,12 @@ nav button {
 
     padding: 0.3rem;
 
+    color: #2c6460;
+    font-weight: bold;
+}
+
+nav a {
+    text-decoration: none;
     color: #2c6460;
     font-weight: bold;
 }

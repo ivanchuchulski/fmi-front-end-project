@@ -197,7 +197,6 @@ function sendRegistrationRequest(url, method, data) {
 }
 
 function registrationRequestHandler(xhr) {
-
 	const OK_RESPONSE_CODE = 200;
 
 	let responseStatusCode = xhr.status;
