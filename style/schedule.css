@@ -233,7 +233,7 @@ footer {
     grid-area: footer;
 }
 
-@media only screen and (max-width: 1280px) {
+@media only screen and (max-width: 1480px) {
     body {
         grid-template-rows: auto auto auto auto auto;
         margin: 1rem;
