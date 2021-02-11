@@ -45,10 +45,9 @@ function ajaxLoadHandler(xhr) {
     const okResponseCode = 200;
 
     let responseCode = xhr.status;
-    let responseText = xhr.responseText;
 
     if (responseCode === okResponseCode) {
-        drawStatistics(responseText);
+        drawStatistics(xhr.responseText);
     } else {
         displayMessage("грешка : статистиката не може да бъде заредена");
     }
@@ -87,7 +86,7 @@ function drawStatistics(responseText) {
     mostPopularPresentationTableData.innerText += mostPreferredPresentation;
     mostPopularPresentationTableData.className += TEXT_CENTER_CLASSNAME;
 
-    topFivePresentations.sort((left, right) => (left.count < right.count) ? 1 : -1);
+    topFivePresentations.sort((left, right) => (parseInt(left.count) < parseInt(right.count)) ? 1 : -1);
 
     let positionCounter = 1;
     let tableBody = document.getElementById("statistics-top-five-body");

@@ -39,10 +39,9 @@ function ajaxLoadPersonalScheduleHandler(xhr) {
 	const okResponseCode = 200;
 
 	let responseCode = xhr.status;
-	let responseText = xhr.responseText;
 
 	if (responseCode === okResponseCode) {
-		drawPersonalEvents(responseText);
+		drawPersonalEvents(xhr.responseText);
 	} else {
 		displayMessage("грешка : персоналните събития не може да бъдат заредени");
 	}

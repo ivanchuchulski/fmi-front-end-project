@@ -200,9 +200,8 @@ function registrationRequestHandler(xhr) {
 	const OK_RESPONSE_CODE = 200;
 
 	let responseStatusCode = xhr.status;
-	let parsedResponseText = JSON.parse(xhr.responseText);
 
-	if (responseStatusCode === OK_RESPONSE_CODE && parsedResponseText.success) {
+	if (responseStatusCode === OK_RESPONSE_CODE && JSON.parse(xhr.responseText).success) {
 		displayRegistrationSuccessMessage("успешна регистрация!");
 
 		let registrationForm = document.getElementById("registration-form");
@@ -226,9 +225,8 @@ function loginRequestHandler(xhr) {
 	const OK_RESPONSE_CODE = 200;
 
 	let responseStatusCode = xhr.status;
-	let parsedResponseText = JSON.parse(xhr.responseText);
 
-	if (responseStatusCode === OK_RESPONSE_CODE && parsedResponseText.success) {
+	if (responseStatusCode === OK_RESPONSE_CODE && JSON.parse(xhr.responseText).success) {
 		displaySchedulePage("schedule.html");
 	} else {
 		displayLoginError('неуспешено влизане в системата');
